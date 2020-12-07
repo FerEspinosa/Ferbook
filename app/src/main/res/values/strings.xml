@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Ferbook</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="correo_electr_nico">Correo electrónico</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="no_tenes_cuenta">¿No tenés cuenta?</string>
+    <string name="registrate_aqui">REGISTRATE AQUI</string>
+    <string name="confirmar_contrasena">Confirmar contraseña</string>
+    <string name="registrate_ahora">Registrate ahora</string>
+    <string name="nombre">Nombre</string>
+    <string name="registrar">Registrar</string>
+</resources>

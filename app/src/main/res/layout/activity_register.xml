@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".registerActivity"
+    android:fitsSystemWindows="true"
+    android:background="@color/black">
+
+
+    <com.github.florent37.shapeofview.shapes.ArcView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:elevation="4dp"
+        app:shape_arc_cropDirection="outside"
+        app:shape_arc_height="20dp"
+        app:shape_arc_position="bottom"
+        >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/colorPressedHighlight"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registrate_ahora"
+            android:layout_marginTop="22dp"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="25sp"
+            android:elevation="3dp"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:src="@drawable/usuario_x"
+            android:layout_gravity="center"
+            android:layout_marginTop="35dp"/>
+
+
+    </com.github.florent37.shapeofview.shapes.ArcView>
+
+
+
+    <LinearLayout
+        android:id="@+id/campos_email_y_contrasena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="250dp">
+
+        <LinearLayout
+            android:id="@+id/layout_campo_nombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/usuario_x"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/editTextWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_nombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nombre"
+                    android:inputType="textPersonName"
+                    android:nextFocusForward="@id/input_email"/>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_campo_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_email_24"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/editTextWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/correo_electr_nico"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusForward="@id/input_contrasena"/>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_campo_contrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_lock_24"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/editTextWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_contrasena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/contrasena"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@id/input_confirmar_contrasena"/>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_campo_confirmar_contrasena"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_baseline_lock_24"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/editTextWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_confirmar_contrasena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/confirmar_contrasena"
+                    android:inputType="textPassword"
+                    android:nextFocusForward="@id/btn_registrar"/>
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_registrar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="45dp"
+            android:layout_gravity="center"
+            android:text="@string/registrar"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="?android:attr/colorPressedHighlight"/>
+
+    </LinearLayout>
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+
+        android:id="@+id/btn_atras"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/back_arrow"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        app:civ_circle_background_color="@color/white"
+        android:elevation="40dp"/>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
