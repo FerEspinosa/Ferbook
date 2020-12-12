@@ -9,8 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ferbook">
-        <activity android:name=".registerActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".activities.PostActivity"></activity>
+        <activity android:name=".activities.CompleteProfileActivity" />
+        <activity android:name=".activities.HomeActivity" />
+        <activity android:name=".activities.registerActivity" />
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
