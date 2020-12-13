@@ -30,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
 public class PostActivity extends AppCompatActivity {
@@ -43,6 +44,7 @@ public class PostActivity extends AppCompatActivity {
     Authprovider        mAuthProvider;
     Button              mButtonPost;
 
+    CircleImageView     btn_back;
     TextInputEditText   mTextInputTitle;
     TextInputEditText   mTextInputDescription;
     ImageView           mImgView_Post1;
@@ -103,6 +105,14 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        btn_back = findViewById(R.id.btn_atras);
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         iv_PC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +145,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void clickPost() {
 
