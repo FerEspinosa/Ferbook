@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -29,11 +30,14 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
+import dmax.dialog.SpotsDialog;
+
 public class PostActivity extends AppCompatActivity {
 
-    ImageView           mImgView_Post1;
-    private final int   gallery_request_code = 1;
-    File                mImageFile;
+    private final int   gallery_request_code1 = 1;
+    private final int   gallery_request_code_2 = 2;
+    File                mImageFile1;
+    File                mImageFile2;
     ImageProvider       mImageProvider;
     PostProvider        mPostProvider;
     Authprovider        mAuthProvider;
@@ -41,6 +45,8 @@ public class PostActivity extends AppCompatActivity {
 
     TextInputEditText   mTextInputTitle;
     TextInputEditText   mTextInputDescription;
+    ImageView           mImgView_Post1;
+    ImageView           mImgView_Post2;
     ImageView           iv_PC;
     ImageView           iv_Nintendo;
     ImageView           iv_PlayStation;
@@ -48,7 +54,7 @@ public class PostActivity extends AppCompatActivity {
     TextView            tv_category;
     String              mCategory="", mTitle="", mDescription="";
 
-
+    AlertDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,11 @@ public class PostActivity extends AppCompatActivity {
         mImageProvider  = new ImageProvider();
         mPostProvider   = new PostProvider();
         mAuthProvider   = new Authprovider();
+
+        mDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
 
         iv_PC                   = findViewById(R.id.iv_pc);
         iv_PlayStation          = findViewById(R.id.iv_playstation);
@@ -71,9 +82,18 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery();
+                openGallery(gallery_request_code1);
             }
         });
+
+        mImgView_Post2 = findViewById(R.id.iv_post2);
+        mImgView_Post2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery(gallery_request_code_2);
+            }
+        });
+
 
         mButtonPost = findViewById(R.id.btn_publicar);
         mButtonPost.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +142,7 @@ public class PostActivity extends AppCompatActivity {
         mDescription = mTextInputDescription.getText().toString();
 
         if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){
-            if (mImageFile != null){
+            if (mImageFile1 != null){
                 saveImage();
             } else {
                 Toast.makeText(this, "Debes seleccionar una imagen", Toast.LENGTH_SHORT).show();
@@ -131,10 +151,14 @@ public class PostActivity extends AppCompatActivity {
             Toast.makeText(this, "Por favor completá todos los campos", Toast.LENGTH_LONG).show();
         }
 
+
     }
 
     private void saveImage() {
-        mImageProvider.save(PostActivity.this, mImageFile)
+
+        mDialog.show();
+
+        mImageProvider.save(PostActivity.this, mImageFile1)
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -144,56 +168,114 @@ public class PostActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
 
-                                    String url = uri.toString();
+                                    String url1 = uri.toString();
 
-                                    Post post = new Post();
+                                    // como ya guardó la imagen n°1, ahora guardar la imagen n°2
+                                    mImageProvider.save(PostActivity.this, mImageFile2)
+                                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> taskimg2) {
+                                                    if (taskimg2.isSuccessful()){
 
-                                    post.setImage1(url);
-                                    post.setTitulo(mTitle);
-                                    post.setDescripcion(mDescription);
-                                    post.setCategory(mCategory);
-                                    post.setId(mAuthProvider.getUid());
+                                                        mImageProvider.getStorage().getDownloadUrl()
+                                                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                    @Override
+                                                                    public void onSuccess(Uri uri2) {
+                                                                        String url2 = uri2.toString();
 
-                                    mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> taskSave) {
-                                            if (taskSave.isSuccessful()){
-                                                Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
-                                            } else {
-                                                Toast.makeText(PostActivity.this, "No se pudo almacenar la información", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
+                                                                        Post post = new Post();
+
+                                                                        post.setImage1(url1);
+                                                                        post.setImage2(url2);
+                                                                        post.setTitulo(mTitle);
+                                                                        post.setDescripcion(mDescription);
+                                                                        post.setCategory(mCategory);
+                                                                        post.setId(mAuthProvider.getUid());
+
+                                                                        mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<Void> taskSave) {
+                                                                                if (taskSave.isSuccessful()){
+                                                                                    mDialog.dismiss();
+                                                                                    clearForm();
+                                                                                    Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
+                                                                                } else {
+                                                                                    mDialog.dismiss();
+                                                                                    Toast.makeText(PostActivity.this, "No se pudo almacenar la información", Toast.LENGTH_LONG).show();
+                                                                                }
+                                                                            }
+                                                                        });
+
+                                                                    }
+                                                                });
+
+                                                    } else {
+                                                        mDialog.dismiss();
+                                                        Toast.makeText(PostActivity.this, "Error al guardar la imagen 2", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }
+                                            });
 
                                 }
                             });
 
                 } else {
-                    Toast.makeText(PostActivity.this, "Error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                    mDialog.dismiss();
+                    Toast.makeText(PostActivity.this, "Error al almacenar la imagen numero 1", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
     }
 
-    private void openGallery() {
+    private void clearForm() {
+
+        mTextInputTitle.setText("");
+        mTextInputDescription.setText("");
+        tv_category.setText("CATEGORIAS");
+        mImgView_Post1.setImageResource(R.drawable.upload_image);
+        mImgView_Post2.setImageResource(R.drawable.upload_image);
+
+        mTitle        ="";
+        mDescription  ="";
+        mCategory     ="";
+        mImageFile1   =null;
+        mImageFile2   =null;
+    }
+
+    private void openGallery(int request_code) {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         //La siguiente línea configura que el Intent abre la galería del teléfono
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, gallery_request_code);
+        startActivityForResult(galleryIntent, request_code);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == gallery_request_code && resultCode == RESULT_OK) {
+        if (requestCode == gallery_request_code1 && resultCode == RESULT_OK) {
             try {
                 //transformar la URI en el archivo mImageFile
-                mImageFile = FileUtil.from(this, data.getData());
+                mImageFile1 = FileUtil.from(this, data.getData());
 
                 // mostrar la imagen en el primer cardview (Post1)
-                mImgView_Post1.setImageBitmap(BitmapFactory.decodeFile(mImageFile.getAbsolutePath()));
+                mImgView_Post1.setImageBitmap(BitmapFactory.decodeFile(mImageFile1.getAbsolutePath()));
+
+
+            } catch (Exception e){
+                Log.d ("ERROR", "se produjo un error"+e.getMessage());
+                Toast.makeText(this, "se produjo un error"+e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (requestCode == gallery_request_code_2 && resultCode == RESULT_OK) {
+            try {
+                //transformar la URI en el archivo mImageFile
+                mImageFile2 = FileUtil.from(this, data.getData());
+
+                // mostrar la imagen en el segundo cardview (Post2)
+                mImgView_Post2.setImageBitmap(BitmapFactory.decodeFile(mImageFile2.getAbsolutePath()));
 
 
             } catch (Exception e){
