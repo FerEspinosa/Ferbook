@@ -1,5 +1,6 @@
 package com.ferbook.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,24 +9,33 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ferbook.R;
+import com.ferbook.providers.ImageProvider;
 import com.ferbook.utils.FileUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
 public class PostActivity extends AppCompatActivity {
 
-    ImageView mImgView_Post1;
-    private final int gallery_request_code = 1;
-    File mImageFile;
+    ImageView           mImgView_Post1;
+    private final int   gallery_request_code = 1;
+    File                mImageFile;
+    Button              mButtonPost;
+    ImageProvider       mImageProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+
+        mImageProvider = new ImageProvider();
 
         mImgView_Post1 = findViewById(R.id.iv_post1);
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +44,30 @@ public class PostActivity extends AppCompatActivity {
                 openGallery();
             }
         });
+
+        mButtonPost = findViewById(R.id.btn_publicar);
+        mButtonPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveImage();
+            }
+        });
+
+
+    }
+
+    private void saveImage() {
+        mImageProvider.save(PostActivity.this, mImageFile).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(PostActivity.this, "La imagen se almacenó correctamente", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(PostActivity.this, "Error al almacenar la imagen", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     private void openGallery() {
