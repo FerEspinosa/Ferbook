@@ -24,7 +24,12 @@ public class ImageProvider {
         byte[] imageByte = CompressorBitmapImage.getImage(context, file.getPath(),500,500);
 
         StorageReference storage = mStorage.child(new Date()+".jpg");
-        return storage.putBytes(imageByte);
 
+        mStorage = storage;
+        return storage.putBytes(imageByte);
+    }
+
+    public StorageReference getStorage () {
+        return mStorage;
     }
 }
