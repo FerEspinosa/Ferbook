@@ -8,7 +8,6 @@ public class Post {
     private String image1;
     private String image2;
     private String category;
-    private String usuario;
 
     public Post () {
 
@@ -21,7 +20,6 @@ public class Post {
         this.image1 = image1;
         this.image2 = image2;
         this.category = category;
-        this.usuario = usuario;
     }
 
     public String getId() {
@@ -72,11 +70,4 @@ public class Post {
         this.category = category;
     }
 
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
 }
