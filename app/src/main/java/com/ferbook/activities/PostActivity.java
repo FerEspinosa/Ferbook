@@ -153,10 +153,10 @@ public class PostActivity extends AppCompatActivity {
         mDescription = mTextInputDescription.getText().toString();
 
         if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){
-            if (mImageFile1 != null){
+            if (mImageFile1 != null && mImageFile2 != null){
                 saveImage();
             } else {
-                Toast.makeText(this, "Debes seleccionar una imagen", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Debes seleccionar dos imagenes", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Por favor completá todos los campos", Toast.LENGTH_LONG).show();
