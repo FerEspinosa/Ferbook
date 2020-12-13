@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -56,7 +57,10 @@ public class PostActivity extends AppCompatActivity {
     TextView            tv_category;
     String              mCategory="", mTitle="", mDescription="";
 
-    AlertDialog mDialog;
+    AlertDialog         mDialog;
+    AlertDialog.Builder mBuilderSelector;
+
+    CharSequence         options[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +76,10 @@ public class PostActivity extends AppCompatActivity {
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
 
+        mBuilderSelector = new AlertDialog.Builder(this);
+        mBuilderSelector.setTitle("selecciona una opción");
+        options = new CharSequence[] {"Imagen de galería", "Tomar foto"};
+
         iv_PC                   = findViewById(R.id.iv_pc);
         iv_PlayStation          = findViewById(R.id.iv_playstation);
         iv_Nintendo             = findViewById(R.id.iv_nintendo);
@@ -84,7 +92,7 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(gallery_request_code1);
+                selectOptionImage(gallery_request_code1);
             }
         });
 
@@ -92,7 +100,7 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(gallery_request_code_2);
+                selectOptionImage(gallery_request_code_2);
             }
         });
 
@@ -146,13 +154,36 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
+    private void selectOptionImage(int request_code) {
+
+        mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which==0) {
+                    // galería
+                    openGallery(request_code);
+                } else if (which==1){
+                    //tomar foto
+                    takePhoto();
+                }
+            }
+        });
+
+        mBuilderSelector.show();
+    }
+
+    private void takePhoto() {
+        Toast.makeText(this, "Tomar foto", Toast.LENGTH_SHORT).show();
+
+    }
+
 
     private void clickPost() {
 
         mTitle = mTextInputTitle.getText().toString();
         mDescription = mTextInputDescription.getText().toString();
 
-        if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){
+        if (!mTitle.isEmpty() && !mDescription.isEmpty() && !mCategory.isEmpty()){
             if (mImageFile1 != null && mImageFile2 != null){
                 saveImage();
             } else {
