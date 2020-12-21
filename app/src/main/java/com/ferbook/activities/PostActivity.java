@@ -38,13 +38,12 @@ public class PostActivity extends AppCompatActivity {
     TextInputEditText   mTextInputDescription;
     TextView            tv_category;
 
+    String              mCategory="", mTitle="", mDescription="";
+
     ImageView           iv_PC;
     ImageView           iv_Nintendo;
     ImageView           iv_PlayStation;
     ImageView           iv_Xbox;
-
-    String              mCategory="", mTitle="", mDescription="";
-
     ImageView           mImgView_Post1;
     ImageView           mImgView_Post2;
 
@@ -53,16 +52,14 @@ public class PostActivity extends AppCompatActivity {
     Authprovider        mAuthProvider;
     Button              mButtonPost;
 
-    //Archivos de imagen
+    AlertDialog         mDialog;
+
     File                mImageFile1;
     File                mImageFile2;
 
     //galería
     private final int   gallery_request_code_1 = 1;
     private final int   gallery_request_code_2 = 2;
-
-    AlertDialog         mDialog;
-
 
 
     @Override
@@ -179,7 +176,7 @@ public class PostActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
 
-                                    final String url1 = uri.toString();
+                                    String url1 = uri.toString();
 
                                     //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
 
