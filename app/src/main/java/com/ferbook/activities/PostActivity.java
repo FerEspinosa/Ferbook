@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -31,25 +29,10 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import dmax.dialog.SpotsDialog;
-
 public class PostActivity extends AppCompatActivity {
 
-    private final int   gallery_request_code1 = 1;
-    private final int   gallery_request_code_2 = 2;
-    File                mImageFile1;
-    File                mImageFile2;
-    ImageProvider       mImageProvider;
-    PostProvider        mPostProvider;
-    Authprovider        mAuthProvider;
-    Button              mButtonPost;
-
-    CircleImageView     btn_back;
     TextInputEditText   mTextInputTitle;
     TextInputEditText   mTextInputDescription;
-    ImageView           mImgView_Post1;
-    ImageView           mImgView_Post2;
     ImageView           iv_PC;
     ImageView           iv_Nintendo;
     ImageView           iv_PlayStation;
@@ -57,10 +40,23 @@ public class PostActivity extends AppCompatActivity {
     TextView            tv_category;
     String              mCategory="", mTitle="", mDescription="";
 
-    AlertDialog         mDialog;
-    AlertDialog.Builder mBuilderSelector;
+    ImageView           mImgView_Post1;
+    ImageView           mImgView_Post2;
 
-    CharSequence         options[];
+    ImageProvider       mImageProvider;
+    PostProvider        mPostProvider;
+    Authprovider        mAuthProvider;
+    Button              mButtonPost;
+
+    //Archivos de imagen
+    File                mImageFile1;
+    File                mImageFile2;
+
+    //galería
+    private final int   gallery_request_code_1 = 1;
+    private final int   gallery_request_code_2 = 2;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,15 +66,6 @@ public class PostActivity extends AppCompatActivity {
         mImageProvider  = new ImageProvider();
         mPostProvider   = new PostProvider();
         mAuthProvider   = new Authprovider();
-
-        mDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Espere un momento")
-                .setCancelable(false).build();
-
-        mBuilderSelector = new AlertDialog.Builder(this);
-        mBuilderSelector.setTitle("selecciona una opción");
-        options = new CharSequence[] {"Imagen de galería", "Tomar foto"};
 
         iv_PC                   = findViewById(R.id.iv_pc);
         iv_PlayStation          = findViewById(R.id.iv_playstation);
@@ -92,7 +79,7 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectOptionImage(gallery_request_code1);
+                openGallery(1);
             }
         });
 
@@ -100,24 +87,15 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectOptionImage(gallery_request_code_2);
+                openGallery(2);
             }
         });
-
 
         mButtonPost = findViewById(R.id.btn_publicar);
         mButtonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 clickPost();
-            }
-        });
-
-        btn_back = findViewById(R.id.btn_atras);
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
 
@@ -154,149 +132,110 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    private void selectOptionImage(int request_code) {
-
-        mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which==0) {
-                    // galería
-                    openGallery(request_code);
-                } else if (which==1){
-                    //tomar foto
-                    takePhoto();
-                }
-            }
-        });
-
-        mBuilderSelector.show();
-    }
-
-    private void takePhoto() {
-        Toast.makeText(this, "Tomar foto", Toast.LENGTH_SHORT).show();
-
-    }
-
-
     private void clickPost() {
 
         mTitle = mTextInputTitle.getText().toString();
         mDescription = mTextInputDescription.getText().toString();
 
-        if (!mTitle.isEmpty() && !mDescription.isEmpty() && !mCategory.isEmpty()){
-            if (mImageFile1 != null && mImageFile2 != null){
+        if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){
+            if (mImageFile1 != null){
                 saveImage();
             } else {
-                Toast.makeText(this, "Debes seleccionar dos imagenes", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Debes seleccionar una imagen", Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(this, "Por favor completá todos los campos", Toast.LENGTH_LONG).show();
         }
 
-
     }
 
     private void saveImage() {
-
-        mDialog.show();
-
         mImageProvider.save(PostActivity.this, mImageFile1)
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                 if (task.isSuccessful()){
+
+                    // La imagen 1 se guardó correctamente en storage
+
+                    // obtener url de imagen 1
                     mImageProvider.getStorage().getDownloadUrl()
                             .addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
 
-                                    String url1 = uri.toString();
+                                    final String url1 = uri.toString();
 
-                                    // como ya guardó la imagen n°1, ahora guardar la imagen n°2
+                                    //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
+
+                                    //guardar imagen 2:
                                     mImageProvider.save(PostActivity.this, mImageFile2)
                                             .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> taskimg2) {
-                                                    if (taskimg2.isSuccessful()){
+                                        @Override
+                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
+                                            if (task2.isSuccessful()) {
 
-                                                        mImageProvider.getStorage().getDownloadUrl()
-                                                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                    @Override
-                                                                    public void onSuccess(Uri uri2) {
-                                                                        String url2 = uri2.toString();
+                                                // la imagen 2 se guardó correctamente
 
-                                                                        Post post = new Post();
+                                                //obtener url de imagen 2
+                                                mImageProvider.getStorage().getDownloadUrl()
+                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri2) {
 
-                                                                        post.setImage1(url1);
-                                                                        post.setImage2(url2);
-                                                                        post.setTitulo(mTitle);
-                                                                        post.setDescripcion(mDescription);
-                                                                        post.setCategory(mCategory);
-                                                                        post.setId(mAuthProvider.getUid());
+                                                        String url2 = uri2.toString();
 
-                                                                        mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                            @Override
-                                                                            public void onComplete(@NonNull Task<Void> taskSave) {
-                                                                                if (taskSave.isSuccessful()){
-                                                                                    mDialog.dismiss();
-                                                                                    clearForm();
-                                                                                    Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
-                                                                                } else {
-                                                                                    mDialog.dismiss();
-                                                                                    Toast.makeText(PostActivity.this, "No se pudo almacenar la información", Toast.LENGTH_LONG).show();
-                                                                                }
-                                                                            }
-                                                                        });
+                                                        // ya se guardaron ambas imagenes y tengo ambas url's
+                                                        // ahora PUBLICAR (GUARDAR los datos de la publicación en database)
+                                                        Post post = new Post();
 
-                                                                    }
-                                                                });
+                                                        post.setImage1(url1);
+                                                        post.setImage2(url2);
+                                                        post.setTitulo(mTitle);
+                                                        post.setDescripcion(mDescription);
+                                                        post.setCategory(mCategory);
+                                                        post.setId(mAuthProvider.getUid());
 
-                                                    } else {
-                                                        mDialog.dismiss();
-                                                        Toast.makeText(PostActivity.this, "Error al guardar la imagen 2", Toast.LENGTH_LONG).show();
+                                                        mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> taskSave) {
+                                                                if (taskSave.isSuccessful()){
+                                                                    Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
+                                                                } else {
+                                                                    Toast.makeText(PostActivity.this, "No se pudo almacenar la información", Toast.LENGTH_LONG).show();
+                                                                }
+                                                            }
+                                                        });
                                                     }
-                                                }
-                                            });
+                                                });
+
+                                            }
+                                        }
+                                    });
 
                                 }
                             });
 
                 } else {
-                    mDialog.dismiss();
-                    Toast.makeText(PostActivity.this, "Error al almacenar la imagen numero 1", Toast.LENGTH_LONG).show();
+                    Toast.makeText(PostActivity.this, "Error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
         });
 
     }
 
-    private void clearForm() {
-
-        mTextInputTitle.setText("");
-        mTextInputDescription.setText("");
-        tv_category.setText("CATEGORIAS");
-        mImgView_Post1.setImageResource(R.drawable.upload_image);
-        mImgView_Post2.setImageResource(R.drawable.upload_image);
-
-        mTitle        ="";
-        mDescription  ="";
-        mCategory     ="";
-        mImageFile1   =null;
-        mImageFile2   =null;
-    }
-
-    private void openGallery(int request_code) {
+    private void openGallery(int imgNumber) {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         //La siguiente línea configura que el Intent abre la galería del teléfono
         galleryIntent.setType("image/*");
-        startActivityForResult(galleryIntent, request_code);
+        startActivityForResult(galleryIntent, imgNumber);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == gallery_request_code1 && resultCode == RESULT_OK) {
+        if (requestCode == gallery_request_code_1 && resultCode == RESULT_OK) {
             try {
                 //transformar la URI en el archivo mImageFile
                 mImageFile1 = FileUtil.from(this, data.getData());
@@ -316,7 +255,7 @@ public class PostActivity extends AppCompatActivity {
                 //transformar la URI en el archivo mImageFile
                 mImageFile2 = FileUtil.from(this, data.getData());
 
-                // mostrar la imagen en el segundo cardview (Post2)
+                // mostrar la imagen en el primer cardview (Post1)
                 mImgView_Post2.setImageBitmap(BitmapFactory.decodeFile(mImageFile2.getAbsolutePath()));
 
 
