@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -28,6 +29,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+
+import dmax.dialog.SpotsDialog;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -56,6 +59,8 @@ public class PostActivity extends AppCompatActivity {
     private final int   gallery_request_code_1 = 1;
     private final int   gallery_request_code_2 = 2;
 
+    AlertDialog         mDialog;
+
 
 
     @Override
@@ -74,6 +79,11 @@ public class PostActivity extends AppCompatActivity {
         mTextInputTitle         = findViewById(R.id.input_juego);
         mTextInputDescription   = findViewById(R.id.input_descripcion);
         tv_category             = findViewById(R.id.tv_categoria);
+
+        mDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
 
         mImgView_Post1 = findViewById(R.id.iv_post1);
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
@@ -150,6 +160,9 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void saveImage() {
+
+        mDialog.show();
+
         mImageProvider.save(PostActivity.this, mImageFile1)
                 .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -186,7 +199,7 @@ public class PostActivity extends AppCompatActivity {
                                                         String url2 = uri2.toString();
 
                                                         // ya se guardaron ambas imagenes y tengo ambas url's
-                                                        // ahora PUBLICAR (GUARDAR los datos de la publicación en database)
+                                                        // ahora PUBLICAR (GUARDAR los datos de la publicación en la base de datos)
                                                         Post post = new Post();
 
                                                         post.setImage1(url1);
@@ -199,6 +212,7 @@ public class PostActivity extends AppCompatActivity {
                                                         mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> taskSave) {
+                                                                mDialog.dismiss();
                                                                 if (taskSave.isSuccessful()){
                                                                     Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
                                                                 } else {
@@ -209,6 +223,9 @@ public class PostActivity extends AppCompatActivity {
                                                     }
                                                 });
 
+                                            } else {
+                                                mDialog.dismiss();
+                                                Toast.makeText(PostActivity.this, "Error al guardar la imagen 2", Toast.LENGTH_LONG).show();
                                             }
                                         }
                                     });
@@ -217,6 +234,7 @@ public class PostActivity extends AppCompatActivity {
                             });
 
                 } else {
+                    mDialog.dismiss();
                     Toast.makeText(PostActivity.this, "Error al almacenar la imagen", Toast.LENGTH_LONG).show();
                 }
             }
