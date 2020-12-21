@@ -30,6 +30,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
 public class PostActivity extends AppCompatActivity {
@@ -50,7 +51,9 @@ public class PostActivity extends AppCompatActivity {
     ImageProvider       mImageProvider;
     PostProvider        mPostProvider;
     Authprovider        mAuthProvider;
+
     Button              mButtonPost;
+    CircleImageView     mBackButton;
 
     AlertDialog         mDialog;
 
@@ -83,6 +86,14 @@ public class PostActivity extends AppCompatActivity {
                 .setContext(this)
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
+
+        mBackButton = findViewById(R.id.btn_atras);
+        mBackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         mImgView_Post1 = findViewById(R.id.iv_post1);
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {

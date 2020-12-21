@@ -331,4 +331,14 @@
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/teal_700"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+
+        android:id="@+id/btn_atras"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/back_arrow"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:elevation="40dp"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
