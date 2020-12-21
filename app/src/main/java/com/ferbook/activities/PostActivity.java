@@ -36,11 +36,13 @@ public class PostActivity extends AppCompatActivity {
 
     TextInputEditText   mTextInputTitle;
     TextInputEditText   mTextInputDescription;
+    TextView            tv_category;
+
     ImageView           iv_PC;
     ImageView           iv_Nintendo;
     ImageView           iv_PlayStation;
     ImageView           iv_Xbox;
-    TextView            tv_category;
+
     String              mCategory="", mTitle="", mDescription="";
 
     ImageView           mImgView_Post1;
@@ -215,6 +217,9 @@ public class PostActivity extends AppCompatActivity {
                                                                 mDialog.dismiss();
                                                                 if (taskSave.isSuccessful()){
                                                                     Toast.makeText(PostActivity.this, "La información se almacenó correctamente", Toast.LENGTH_LONG).show();
+
+                                                                    clearForm();
+
                                                                 } else {
                                                                     Toast.makeText(PostActivity.this, "No se pudo almacenar la información", Toast.LENGTH_LONG).show();
                                                                 }
@@ -239,6 +244,23 @@ public class PostActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void clearForm() {
+
+        mTextInputTitle.setText("");
+        mTextInputDescription.setText("");
+        tv_category.setText("");
+        mImgView_Post1.setImageResource(R.drawable.upload_image);
+        mImgView_Post2.setImageResource(R.drawable.upload_image);
+
+        mTitle          = "";
+        mDescription    = "";
+        mCategory       = "";
+
+        mImageFile1 = null;
+        mImageFile2 = null;
 
     }
 
