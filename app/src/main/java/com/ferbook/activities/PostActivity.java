@@ -3,6 +3,7 @@ package com.ferbook.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +11,8 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,8 +31,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.UploadTask;
+import com.google.type.PostalAddress;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
@@ -42,10 +49,13 @@ public class PostActivity extends AppCompatActivity {
 
     String              mCategory="", mTitle="", mDescription="";
 
+    //botones de consolas
     ImageView           iv_PC;
     ImageView           iv_Nintendo;
     ImageView           iv_PlayStation;
     ImageView           iv_Xbox;
+
+    //boton de imagen
     ImageView           mImgView_Post1;
     ImageView           mImgView_Post2;
 
@@ -69,8 +79,12 @@ public class PostActivity extends AppCompatActivity {
     private final int   gallery_request_code_2 = 2;
     
     //foto
-    private  final int photo_request_code_1 = 3;
-    private  final int photo_request_code_2 = 4;
+    private  final int  photo_request_code_1 = 3;
+    private  final int  photo_request_code_2 = 4;
+    String              mAbsolutePhotoPath;
+    String              mPhotoPath;
+    File                mPhotoFile;
+
 
 
     @Override
@@ -203,7 +217,38 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void takePhoto(int photo_request_code_1) {
-        Toast.makeText(this, "Se tomará la foto", Toast.LENGTH_LONG).show();
+
+        Intent takePictureIntent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager())!=null) {
+            File photoFile = null;
+            try {
+
+                photoFile = createPhotoFile();
+
+            } catch(Exception e) {
+                Toast.makeText(this, "Hubo un error en el archivo" + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            if (photoFile != null) {
+                Uri photoUri = FileProvider.getUriForFile(PostActivity.this, "com.ferbook",photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(takePictureIntent, photo_request_code_1);
+            }
+
+        }
+
+    }
+
+    private File createPhotoFile() throws IOException {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File photoFile  = File.createTempFile(
+                new Date() + "_photo",
+                ".jpg",
+                storageDir
+        );
+        mPhotoPath = "file:" + photoFile.getAbsolutePath();
+        mAbsolutePhotoPath =  photoFile.getAbsolutePath();
+        return photoFile;
     }
 
     private void clickPost() {
@@ -337,6 +382,7 @@ public class PostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // seleccion de imagen 1 desde la galeria
         if (requestCode == gallery_request_code_1 && resultCode == RESULT_OK) {
             try {
                 //transformar la URI en el archivo mImageFile
@@ -352,6 +398,7 @@ public class PostActivity extends AppCompatActivity {
             }
         }
 
+        // seleccion de imagen 2 desde la galeria
         if (requestCode == gallery_request_code_2 && resultCode == RESULT_OK) {
             try {
                 //transformar la URI en el archivo mImageFile
@@ -365,6 +412,13 @@ public class PostActivity extends AppCompatActivity {
                 Log.d ("ERROR", "se produjo un error"+e.getMessage());
                 Toast.makeText(this, "se produjo un error"+e.getMessage(), Toast.LENGTH_LONG).show();
             }
+        }
+
+        // seleccion de imagen 1 desde la camara
+        if (requestCode == photo_request_code_1 && resultCode == RESULT_OK){
+
+            Picasso.with(PostActivity.this).load(mPhotoPath).into(mImgView_Post1);
+
         }
 
     }
