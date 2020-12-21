@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -57,12 +58,19 @@ public class PostActivity extends AppCompatActivity {
 
     AlertDialog         mDialog;
 
+    AlertDialog.Builder mBuilderSelector;
+    CharSequence        options[];
+
     File                mImageFile1;
     File                mImageFile2;
 
     //galería
     private final int   gallery_request_code_1 = 1;
     private final int   gallery_request_code_2 = 2;
+    
+    //foto
+    private  final int photo_request_code_1 = 3;
+    private  final int photo_request_code_2 = 4;
 
 
     @Override
@@ -87,6 +95,11 @@ public class PostActivity extends AppCompatActivity {
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
 
+        mBuilderSelector = new AlertDialog.Builder(this);
+        mBuilderSelector.setTitle("Selecciona una opción");
+        options = new CharSequence[]{"Imagen de la galería","Tomar foto"};
+
+
         mBackButton = findViewById(R.id.btn_atras);
         mBackButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +112,7 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(1);
+                selectOptionImage(1);
             }
         });
 
@@ -107,7 +120,7 @@ public class PostActivity extends AppCompatActivity {
         mImgView_Post2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGallery(2);
+                selectOptionImage(2);
             }
         });
 
@@ -150,6 +163,47 @@ public class PostActivity extends AppCompatActivity {
                 tv_category.setText(mCategory);
             }
         });
+    }
+
+    private void selectOptionImage(int imageNumber) {
+        mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+
+                    //galería
+
+                    if (imageNumber==1){
+                        openGallery(gallery_request_code_1);
+
+                    } else if (imageNumber==2){
+                        openGallery(gallery_request_code_2);
+                    }
+
+                } else if (which == 1) {
+
+                    //foto
+                    if (imageNumber==1){
+
+                        //foto 1
+                        takePhoto(photo_request_code_1);
+
+                    } else if (imageNumber==2){
+
+                        // foto 2
+                        takePhoto(photo_request_code_2);
+
+                    }
+
+                }
+            }
+        });
+
+        mBuilderSelector.show();
+    }
+
+    private void takePhoto(int photo_request_code_1) {
+        Toast.makeText(this, "Se tomará la foto", Toast.LENGTH_LONG).show();
     }
 
     private void clickPost() {
