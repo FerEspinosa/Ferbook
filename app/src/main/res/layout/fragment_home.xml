@@ -12,6 +12,8 @@
         android:layout_height="match_parent"
         android:text="fragment home" />
 
+    <include layout="@layout/action_bar_toolbar"/>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -19,7 +21,8 @@
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="15dp"
         android:layout_marginRight="15dp"
-        android:src="@drawable/ic_signo_mas"/>
+        android:src="@drawable/ic_signo_mas"
+        android:backgroundTint="@color/red"/>
 
 
 </FrameLayout>
