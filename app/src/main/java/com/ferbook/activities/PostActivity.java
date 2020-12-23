@@ -254,11 +254,11 @@ public class PostActivity extends AppCompatActivity {
         if (requestCode == photo_request_code_1) {
 
             mPhotoPath1 = "file:" + photoFile.getAbsolutePath();
-            mAbsolutePhotoPath1 =  photoFile.getAbsolutePath();
+            mAbsolutePhotoPath1  =  photoFile.getAbsolutePath();
 
         } else if (requestCode == photo_request_code_2) {
             mPhotoPath2 = "file:" + photoFile.getAbsolutePath();
-            mAbsolutePhotoPath2 =  photoFile.getAbsolutePath();
+            mAbsolutePhotoPath2  =  photoFile.getAbsolutePath();
         }
 
         return photoFile;

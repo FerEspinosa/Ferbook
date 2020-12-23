@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:orientation="vertical"
-            android:background="?android:attr/colorActivatedHighlight">
+            android:background="@color/red">
 
             <TextView
                 android:layout_width="match_parent"
@@ -32,10 +32,10 @@
                 android:layout_width        ="match_parent"
                 android:layout_height       ="wrap_content"
                 android:orientation         ="horizontal"
-                android:layout_marginTop    ="30dp"
+                android:layout_marginTop    ="20dp"
                 android:layout_marginStart  ="30dp"
                 android:layout_marginEnd    ="30dp"
-                android:layout_marginBottom ="20dp">
+                android:layout_marginBottom ="10dp">
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
@@ -43,7 +43,7 @@
                     app:cardBackgroundColor="@color/white"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
-                    app:cardCornerRadius="15dp">
+                    app:cardCornerRadius="10dp">
 
                     <ImageView
                         android:id="@+id/iv_post1"
@@ -60,7 +60,7 @@
                     app:cardBackgroundColor="@color/white"
                     android:layout_weight="1"
                     android:layout_margin="10dp"
-                    app:cardCornerRadius="15dp">
+                    app:cardCornerRadius="10dp">
 
                     <ImageView
                         android:id="@+id/iv_post2"

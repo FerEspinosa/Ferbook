@@ -44,4 +44,10 @@ public class Authprovider {
         return mAuth.createUserWithEmailAndPassword(email, contrasena);
     }
 
+    public void logout (){
+        if (mAuth != null){
+            mAuth.signOut();
+        }
+    }
+
 }
