@@ -226,7 +226,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void goHome () {
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (mAuthProvider.getUserSession() != null){
+            goHome();
+        }
+
+    }
 }
