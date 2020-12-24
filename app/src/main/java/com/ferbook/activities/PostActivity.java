@@ -348,6 +348,7 @@ public class PostActivity extends AppCompatActivity {
                                                         post.setDescripcion(mDescription);
                                                         post.setCategory(mCategory);
                                                         post.setId(mAuthProvider.getUid());
+                                                        post.setTimestamp(new Date().getTime());
 
                                                         mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override

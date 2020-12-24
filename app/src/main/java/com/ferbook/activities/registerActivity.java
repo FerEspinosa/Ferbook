@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -33,7 +34,7 @@ public class registerActivity extends AppCompatActivity {
 
     CircleImageView     btn_atras;
     Button              btn_registrarse;
-    TextInputEditText   tv_nombre, tv_email, tv_contrasena, tv_confirmar_contrasena;
+    TextInputEditText   tv_nombre, tv_email, tv_contrasena, tv_confirmar_contrasena, tv_telefono;
     Authprovider        mAuthProvider;
     UsersProvider       mUsersProvider;
     AlertDialog         mDialog;
@@ -62,6 +63,7 @@ public class registerActivity extends AppCompatActivity {
         tv_email                  = findViewById(R.id.input_email);
         tv_contrasena             = findViewById(R.id.input_contrasena);
         tv_confirmar_contrasena   = findViewById(R.id.input_confirmar_contrasena);
+        tv_telefono               = findViewById(R.id.input_telefono);
     }
 
     private void set_btn_atras(){
@@ -86,17 +88,23 @@ public class registerActivity extends AppCompatActivity {
                 String email        = tv_email.getText().toString();
                 String contrasena   = tv_contrasena.getText().toString();
                 String confirmar    = tv_confirmar_contrasena.getText().toString();
+                String telefono     = tv_telefono.getText().toString();
 
 
                 // Validaciones de los campos de texto:
 
-                if (!nombre.isEmpty() && !email.isEmpty() && !contrasena.isEmpty() && !confirmar.isEmpty()) {
+                if (!nombre.isEmpty()
+                        && !email.isEmpty()
+                        && !contrasena.isEmpty()
+                        && !confirmar.isEmpty()
+                        && !telefono.isEmpty()) {
+
                     if (isEmailValid(email)){
                         if (contrasena.equals(confirmar)){
                             if (contrasena.length()>=6){
 
                                 //REGISTRAR
-                                crear_usuario(email, contrasena, nombre);
+                                crear_usuario(email, contrasena, nombre, telefono);
 
                             } else {
                                 Toast.makeText(registerActivity.this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
@@ -115,7 +123,7 @@ public class registerActivity extends AppCompatActivity {
         });
     }
 
-    private void crear_usuario(String email, String contrasena, String nombre) {
+    private void crear_usuario(String email, String contrasena, String nombre, String telefono) {
 
         mAuthProvider.register(email, contrasena)
         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -129,6 +137,8 @@ public class registerActivity extends AppCompatActivity {
                     user.setNombre(nombre);
                     user.setEmail(email);
                     user.setId(id);
+                    user.setTelefono(telefono);
+                    user.setTimestamp(new Date().getTime());
                     mUsersProvider.create(user);
 
                     mUsersProvider.create(user)

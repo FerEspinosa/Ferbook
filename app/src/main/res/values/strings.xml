@@ -30,4 +30,5 @@
     <string name="titulo_de_juego">Titulo de Juego</string>
     <string name="descripcion_del_juego">Descripción del juego</string>
     <string name="fragment_home">fragment home</string>
+    <string name="telefono">Teléfono</string>
 </resources>

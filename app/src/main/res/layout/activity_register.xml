@@ -172,8 +172,38 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/confirmar_contrasena"
                     android:inputType="textPassword"
-                    android:nextFocusForward="@id/btn_registrar"/>
+                    android:nextFocusForward="@id/input_telefono"/>
 
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_campo_telefono"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_phone"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/editTextWhite">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_telefono"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/telefono"
+                    android:inputType="phone"
+                    android:nextFocusForward="@id/btn_registrar"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 

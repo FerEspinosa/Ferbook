@@ -9,19 +9,21 @@ public class Post {
     private String image2;
     private String category;
     private String usuario;
+    private Long   timestamp;
 
     public Post () {
 
     }
 
-    public Post(String id, String titulo, String descripcion, String image1, String image2, String category, String usuario) {
-        this.id = id;
-        this.titulo = titulo;
+    public Post(String id, String titulo, String descripcion, String image1, String image2, String category, String usuario, Long timestamp) {
+        this.id          = id;
+        this.titulo      = titulo;
         this.descripcion = descripcion;
-        this.image1 = image1;
-        this.image2 = image2;
-        this.category = category;
-        this.usuario = usuario;
+        this.image1      = image1;
+        this.image2      = image2;
+        this.category    = category;
+        this.usuario     = usuario;
+        this.timestamp   = timestamp;
     }
 
     public String getId() {
@@ -78,5 +80,13 @@ public class Post {
 
     public void setUsuario(String usuario) {
         this.usuario = usuario;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

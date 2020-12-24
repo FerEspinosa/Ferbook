@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import dmax.dialog.SpotsDialog;
 public class CompleteProfileActivity extends AppCompatActivity {
 
     Button              btn_actualizar;
-    TextInputEditText   tv_nombre;
+    TextInputEditText   tv_nombre, tv_telefono;
 
     Authprovider        mAuthProvider;
     UsersProvider       mUsersProvider;
@@ -55,7 +56,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void set_inputs() {
+
         tv_nombre = findViewById(R.id.input_nombre);
+        tv_telefono = findViewById(R.id.input_telefono);
     }
 
     private void set_btn_actualizar () {
@@ -66,12 +69,13 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
                 mDialog.show();
 
-                String nombre = tv_nombre.getText().toString();
+                String nombre   = tv_nombre.getText().toString();
+                String telefono = tv_telefono.getText().toString();
 
                 // Validaciones de los campos de texto:
                 if (!nombre.isEmpty()) {
 
-                    actualizar_usuario(nombre);
+                    actualizar_usuario(nombre, telefono);
 
                 } else {
                     Toast.makeText(CompleteProfileActivity.this, "Completá todos los campos", Toast.LENGTH_LONG).show();
@@ -82,13 +86,15 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
 
-    private void actualizar_usuario(String nombre) {
+    private void actualizar_usuario(String nombre, String telefono) {
 
         String id = mAuthProvider.getUid();
 
         User user = new User();
         user.setId(id);
         user.setNombre(nombre);
+        user.setTelefono(telefono);
+        user.setTimestamp(new Date().getTime());
 
         mUsersProvider.updateNombre(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
