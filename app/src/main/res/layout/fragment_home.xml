@@ -3,16 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment"
     android:layout_marginBottom="50dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <include layout="@layout/action_bar_toolbar"/>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="fragment home" />
+        android:orientation="vertical"
+        android:layout_marginTop="53dp">
 
-    <include layout="@layout/action_bar_toolbar"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_Home"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+    </LinearLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -20,9 +31,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginEnd="15dp"
         android:src="@drawable/ic_signo_mas"
-        android:backgroundTint="@color/red"/>
+        android:backgroundTint="@color/red"
+        android:contentDescription="@string/app_name" />
 
 
 </FrameLayout>
