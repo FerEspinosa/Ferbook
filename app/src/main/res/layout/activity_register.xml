@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.registerActivity"
-    android:fitsSystemWindows="true"
-    android:background="@color/black">
+    android:fitsSystemWindows="true">
 
 
     <com.github.florent37.shapeofview.shapes.ArcView
@@ -21,7 +20,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?android:attr/colorPressedHighlight"/>
+            android:background="@color/red"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -32,7 +31,7 @@
             android:textStyle="bold"
             android:textSize="25sp"
             android:elevation="3dp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="150dp"
@@ -64,14 +63,13 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/usuario_x"
+                android:src="@drawable/ic_person_grey"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/editTextWhite">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_nombre"
@@ -95,14 +93,13 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/ic_baseline_email_24"
+                android:src="@drawable/ic_email_grey"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/editTextWhite">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_email"
@@ -126,14 +123,13 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/ic_baseline_lock_24"
+                android:src="@drawable/ic_password_grey"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/editTextWhite">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_contrasena"
@@ -157,14 +153,13 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/ic_baseline_lock_24"
+                android:src="@drawable/ic_password_grey"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/editTextWhite">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_confirmar_contrasena"
@@ -188,14 +183,13 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:src="@drawable/ic_phone"
+                android:src="@drawable/ic_phone_grey"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="10dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/editTextWhite">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/input_telefono"
@@ -216,10 +210,11 @@
             android:layout_marginTop="45dp"
             android:layout_gravity="center"
             android:text="@string/registrar"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="20sp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="?android:attr/colorPressedHighlight"/>
+            android:backgroundTint="@color/red"/>
 
     </LinearLayout>
 
