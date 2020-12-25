@@ -33,6 +33,7 @@
     <string name="telefono">Teléfono</string>
 
     <string name="transitionname_picture">transitionnamepicture</string>
+    <string name="editar_perfil">EDITAR PERFIL</string>
 
 
 </resources>
