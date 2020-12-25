@@ -31,4 +31,8 @@
     <string name="descripcion_del_juego">Descripción del juego</string>
     <string name="fragment_home">fragment home</string>
     <string name="telefono">Teléfono</string>
+
+    <string name="transitionname_picture">transitionnamepicture</string>
+
+
 </resources>
