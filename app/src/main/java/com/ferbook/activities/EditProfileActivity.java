@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -88,24 +89,11 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        mInput_name  = findViewById(R.id.input_nombre);
-        mInput_phone = findViewById(R.id.input_telefono);
+        initialize();
 
-        mImageProvider = new ImageProvider();
-        mUsersProvider = new UsersProvider();
-        mAuthProvider  = new Authprovider();
+        getUser();
 
-        mWaitDialog = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Espere un momento")
-                .setCancelable(false).build();
-
-        mBuilderSelector = new AlertDialog.Builder(this);
-        mBuilderSelector.setTitle("Selecciona una opción");
-        options = new CharSequence[]{"Imagen de la galería","Tomar foto"};
-
-        // IMAGEN DE PERFIL
-        mImageView_PROFILE = findViewById(R.id.circleImage_Profile);
+        // click en IMAGEN DE PERFIL
         mImageView_PROFILE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,8 +103,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // IMAGEN DE PORTADA
-        mImageView_COVER = findViewById(R.id.imageViewCover);
+        // click en IMAGEN DE PORTADA
         mImageView_COVER.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,8 +113,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // BOTON ACTUALIZAR
-        mButton_update = findViewById(R.id.btn_actualizar);
+        // click en BOTON ACTUALIZAR
         mButton_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,8 +123,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // BOTON ATRAS
-        mImageView_Back_button = findViewById(R.id.btn_atras);
+        // click en BOTON ATRAS
         mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +131,52 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void initialize () {
+        mInput_name             = findViewById(R.id.input_nombre);
+        mInput_phone            = findViewById(R.id.input_telefono);
+        mImageView_PROFILE      = findViewById(R.id.circleImage_Profile);
+        mImageView_COVER        = findViewById(R.id.imageViewCover);
+        mButton_update          = findViewById(R.id.btn_actualizar);
+        mImageView_Back_button  = findViewById(R.id.btn_atras);
+
+        mImageProvider  = new ImageProvider();
+        mUsersProvider  = new UsersProvider();
+        mAuthProvider   = new Authprovider();
+
+        mWaitDialog     = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
+
+        mBuilderSelector = new AlertDialog.Builder(this);
+        mBuilderSelector.setTitle("Selecciona una opción");
+        options = new CharSequence[]{"Imagen de la galería","Tomar foto"};
+    }
+
+    private void getUser() {
+        mUsersProvider.getUser(mAuthProvider.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+
+                if (documentSnapshot.exists()) {
+
+                    mName   = documentSnapshot.getString("nombre");
+                    mInput_name.setText(mName);
+
+                    mPhone  = documentSnapshot.getString("telefono");
+                    mInput_phone.setText(mPhone);
+
+                    String imageProfile = documentSnapshot.getString("profile_image");
+                    String imageCover = documentSnapshot.getString("cover_image");
+
+                    Picasso.with(EditProfileActivity.this).load(imageProfile).into(mImageView_PROFILE);
+                    Picasso.with(EditProfileActivity.this).load(imageCover).into(mImageView_COVER);
+                }
+            }
+        });
     }
 
     private void selectOptionImage(final String whichImage) {
