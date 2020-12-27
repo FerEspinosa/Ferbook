@@ -89,11 +89,24 @@ public class EditProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
-        initialize();
+        mInput_name  = findViewById(R.id.input_nombre);
+        mInput_phone = findViewById(R.id.input_telefono);
 
-        getUser();
+        mImageProvider = new ImageProvider();
+        mUsersProvider = new UsersProvider();
+        mAuthProvider  = new Authprovider();
 
-        // click en IMAGEN DE PERFIL
+        mWaitDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
+
+        mBuilderSelector = new AlertDialog.Builder(this);
+        mBuilderSelector.setTitle("Selecciona una opción");
+        options = new CharSequence[]{"Imagen de la galería","Tomar foto"};
+
+        // IMAGEN DE PERFIL
+        mImageView_PROFILE = findViewById(R.id.circleImage_Profile);
         mImageView_PROFILE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +116,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // click en IMAGEN DE PORTADA
+        // IMAGEN DE PORTADA
+        mImageView_COVER = findViewById(R.id.imageViewCover);
         mImageView_COVER.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,7 +127,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // click en BOTON ACTUALIZAR
+        // BOTON ACTUALIZAR
+        mButton_update = findViewById(R.id.btn_actualizar);
         mButton_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +138,8 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // click en BOTON ATRAS
+        // BOTON ATRAS
+        mImageView_Back_button = findViewById(R.id.btn_atras);
         mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,29 +147,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-
-    private void initialize () {
-        mInput_name             = findViewById(R.id.input_nombre);
-        mInput_phone            = findViewById(R.id.input_telefono);
-        mImageView_PROFILE      = findViewById(R.id.circleImage_Profile);
-        mImageView_COVER        = findViewById(R.id.imageViewCover);
-        mButton_update          = findViewById(R.id.btn_actualizar);
-        mImageView_Back_button  = findViewById(R.id.btn_atras);
-
-        mImageProvider  = new ImageProvider();
-        mUsersProvider  = new UsersProvider();
-        mAuthProvider   = new Authprovider();
-
-        mWaitDialog     = new SpotsDialog.Builder()
-                .setContext(this)
-                .setMessage("Espere un momento")
-                .setCancelable(false).build();
-
-        mBuilderSelector = new AlertDialog.Builder(this);
-        mBuilderSelector.setTitle("Selecciona una opción");
-        options = new CharSequence[]{"Imagen de la galería","Tomar foto"};
     }
 
     private void getUser() {
@@ -447,4 +440,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
 
     }
+
+    //Comienza nuevo branch
 }
