@@ -1,5 +1,6 @@
 package com.ferbook.activities;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -19,8 +20,16 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.ferbook.R;
+import com.ferbook.models.User;
+import com.ferbook.providers.Authprovider;
+import com.ferbook.providers.ImageProvider;
+import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.FileUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -28,6 +37,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -36,9 +46,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     CircleImageView     mImageView_PROFILE;
     ImageView           mImageView_COVER;
-    TextInputEditText   mInput_name;
-    TextInputEditText   mInput_phone;
 
+    TextInputEditText   mInput_name;
+    String              mName = "";
+
+    TextInputEditText   mInput_phone;
+    String              mPhone = "";
+
+    AlertDialog         mWaitDialog;
 
     AlertDialog.Builder mBuilderSelector;
     CharSequence[]      options;
@@ -63,6 +78,10 @@ public class EditProfileActivity extends AppCompatActivity {
     String              mAbsolutePhotoPath_PHOTO_COVER;
     String              mPhotoPath_PHOTO_COVER;
 
+    // PROVIDERS
+    ImageProvider       mImageProvider;
+    UsersProvider       mUsersProvider;
+    Authprovider        mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +90,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
         mInput_name  = findViewById(R.id.input_nombre);
         mInput_phone = findViewById(R.id.input_telefono);
+
+        mImageProvider = new ImageProvider();
+        mUsersProvider = new UsersProvider();
+        mAuthProvider  = new Authprovider();
+
+        mWaitDialog = new SpotsDialog.Builder()
+                .setContext(this)
+                .setMessage("Espere un momento")
+                .setCancelable(false).build();
 
         mBuilderSelector = new AlertDialog.Builder(this);
         mBuilderSelector.setTitle("Selecciona una opción");
@@ -103,7 +131,9 @@ public class EditProfileActivity extends AppCompatActivity {
         mButton_update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ACTUALIZAR DATOS
+
+                clickEditProfile();
+
             }
         });
 
@@ -262,6 +292,128 @@ public class EditProfileActivity extends AppCompatActivity {
             Picasso.with(EditProfileActivity.this).load(mPhotoPath_PHOTO_COVER).into(mImageView_COVER);
 
         }
+
+    }
+
+    private void clickEditProfile() {
+
+        mName = mInput_name.getText().toString();
+        mPhone = mInput_phone.getText().toString();
+
+        if (!mName.isEmpty() && !mPhone.isEmpty()){
+
+            if (mImageFile_GALLERY_PROFILE != null && mImageFile_GALLERY_COVER != null){
+                // imagen 1 y 2 de la galería
+                saveImage(mImageFile_GALLERY_PROFILE,mImageFile_GALLERY_COVER);
+
+            } else if (mPhotoFile_PHOTO_PROFILE != null && mPhotoFile_PHOTO_COVER != null){
+                // imagen 1 y 2 de la camara
+                saveImage(mPhotoFile_PHOTO_PROFILE,mPhotoFile_PHOTO_COVER);
+
+            } else if (mImageFile_GALLERY_PROFILE != null && mPhotoFile_PHOTO_COVER != null){
+                // imagen 1 de la galería y 2 de la camara
+                saveImage(mImageFile_GALLERY_PROFILE,mPhotoFile_PHOTO_COVER);
+
+            } else if (mPhotoFile_PHOTO_PROFILE != null && mImageFile_GALLERY_COVER!= null){
+                // imagen 1 de la camara y 2 de la galeria
+                saveImage(mPhotoFile_PHOTO_PROFILE,mImageFile_GALLERY_COVER);
+
+            }  else {
+                Toast.makeText(this, "Debes seleccionar dos imágenes", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+            Toast.makeText(this, "Completa los campos de texto", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
+    private void saveImage( File imageFile1, File imageFile2) {
+
+        mWaitDialog.show();
+
+        mImageProvider.save(EditProfileActivity.this, imageFile1)
+                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        if (task.isSuccessful()){
+
+                            // La imagen 1 se guardó correctamente en storage
+
+                            // obtener url de imagen 1
+                            mImageProvider.getStorage().getDownloadUrl()
+                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+
+                                            final String url_Profile = uri.toString();
+
+                                            //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
+
+                                            //guardar imagen 2:
+                                            mImageProvider.save(EditProfileActivity.this, imageFile2)
+                                                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
+                                                            if (task2.isSuccessful()) {
+
+                                                                // la imagen 2 se guardó correctamente
+
+                                                                //obtener url de imagen 2
+                                                                mImageProvider.getStorage().getDownloadUrl()
+                                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                            @Override
+                                                                            public void onSuccess(Uri uri2) {
+
+                                                                                String url_Cover = uri2.toString();
+
+                                                                                // ya se guardaron ambas imagenes y tengo ambas url's
+                                                                                // ahora PUBLICAR (GUARDAR los datos de la publicación en la base de datos)
+
+                                                                                User mUser = new User();
+                                                                                mUser.setNombre(mName);
+                                                                                mUser.setTelefono(mPhone);
+                                                                                mUser.setProfile_image(url_Profile);
+                                                                                mUser.setCover_image(url_Cover);
+                                                                                mUser.setId(mAuthProvider.getUid());
+
+
+                                                                                mUsersProvider.update(mUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onComplete(@NonNull Task<Void> taskSave) {
+
+                                                                                        mWaitDialog.dismiss();
+
+                                                                                        if (taskSave.isSuccessful()){
+                                                                                            Toast.makeText(EditProfileActivity.this, "La información se actualizó correctamente", Toast.LENGTH_LONG).show();
+
+                                                                                            //clearForm();
+
+                                                                                        } else {
+                                                                                            Toast.makeText(EditProfileActivity.this, "No se pudo actualizar la información", Toast.LENGTH_LONG).show();
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
+
+                                                            } else {
+                                                                mWaitDialog.dismiss();
+                                                                Toast.makeText(EditProfileActivity.this, "Error al guardar la imagen de portada", Toast.LENGTH_LONG).show();
+                                                            }
+                                                        }
+                                                    });
+
+                                        }
+                                    });
+
+                        } else {
+                            mWaitDialog.dismiss();
+                            Toast.makeText(EditProfileActivity.this, "Error al almacenar la imagen de perfil", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
 
     }
 }

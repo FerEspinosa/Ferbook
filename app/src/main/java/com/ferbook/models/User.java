@@ -7,17 +7,21 @@ public class User {
     private String nombre;
     private String telefono;
     private Long timestamp;
+    private String profile_image;
+    private String cover_image;
 
     public User () {
 
     }
 
-    public User(String id, String email, String nombre, String telefono, Long timestamp) {
+    public User(String id, String email, String nombre, String telefono, Long timestamp, String profile_image, String cover_image) {
         this.id = id;
         this.email = email;
         this.nombre = nombre;
         this.telefono = telefono;
         this.timestamp = timestamp;
+        this.profile_image = profile_image;
+        this.cover_image = cover_image;
     }
 
     public String getTelefono() {
@@ -58,5 +62,21 @@ public class User {
 
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getProfile_image() {
+        return profile_image;
+    }
+
+    public void setProfile_image(String profile_image) {
+        this.profile_image = profile_image;
+    }
+
+    public String getCover_image() {
+        return cover_image;
+    }
+
+    public void setCover_image(String cover_image) {
+        this.cover_image = cover_image;
     }
 }
