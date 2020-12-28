@@ -22,4 +22,11 @@ public class PostProvider {
         return mCollection.orderBy("titulo", Query.Direction.DESCENDING);
     }
 
+
+    public Query getPostsByUser(String id) {
+
+        // devuelve todos los documentos donde el campo "id" sea igual al id que se pasa por parámetro
+        return mCollection.whereEqualTo("id", id);
+    }
+
 }

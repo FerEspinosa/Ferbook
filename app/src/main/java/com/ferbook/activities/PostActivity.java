@@ -185,7 +185,6 @@ public class PostActivity extends AppCompatActivity {
             }
         });
     }
-    // chequeado (OK)
 
     private void selectOptionImage(final int imageNumber) {
         mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
@@ -223,7 +222,6 @@ public class PostActivity extends AppCompatActivity {
 
         mBuilderSelector.show();
     }
-    // chequeado (OK)
 
     private void takePhoto(int requestCode) {
 
@@ -246,7 +244,6 @@ public class PostActivity extends AppCompatActivity {
         }
 
     }
-    // chequeado (OK)
 
     private File createPhotoFile( int requestCode) throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -269,7 +266,6 @@ public class PostActivity extends AppCompatActivity {
         return photoFile;
 
     }
-    // chequeado (OK)
 
     private void clickPost() {
 
@@ -304,7 +300,6 @@ public class PostActivity extends AppCompatActivity {
         }
 
     }
-    // chequeado (OK)
 
     private void saveImage( File imageFile1, File imageFile2) {
 
@@ -392,7 +387,6 @@ public class PostActivity extends AppCompatActivity {
         });
 
     }
-    // chequeado (OK)
 
     private void clearForm() {
 
@@ -410,7 +404,6 @@ public class PostActivity extends AppCompatActivity {
         mImageFile2 = null;
 
     }
-    // chequeado (OK)
 
     private void openGallery(int imgNumber) {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -418,7 +411,6 @@ public class PostActivity extends AppCompatActivity {
         galleryIntent.setType("image/*");
         startActivityForResult(galleryIntent, imgNumber);
     }
-    // chequeado (OK)
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -477,6 +469,5 @@ public class PostActivity extends AppCompatActivity {
         }
 
     }
-    // chequeado (OK)
 
 }

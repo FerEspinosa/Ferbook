@@ -54,6 +54,9 @@ public class EditProfileActivity extends AppCompatActivity {
     TextInputEditText   mInput_phone;
     String              mPhone = "";
 
+    String              mProfileImage ="";
+    String              mCoverImage   ="";
+
     AlertDialog         mWaitDialog;
 
     AlertDialog.Builder mBuilderSelector;
@@ -68,16 +71,16 @@ public class EditProfileActivity extends AppCompatActivity {
     File                mImageFile_GALLERY_COVER = null;
 
     // PROFILE CAMARA
-    private  final int  request_code_PHOTO_PROFILE = 3;
-    File                mPhotoFile_PHOTO_PROFILE;
-    String              mAbsolutePhotoPath_PHOTO_PROFILE;
-    String              mPhotoPath_PHOTO_PROFILE;
+    private  final int  request_code_CAMERA_PROFILE = 3;
+    File                mImageFile_CAMERA_PROFILE;
+    String              mAbsolutePhotoPath_CAMERA_PROFILE;
+    String              mPhotoPath_CAMERA_PROFILE;
 
     // COVER CAMARA
-    private  final int  request_code_PHOTO_COVER = 4;
-    File                mPhotoFile_PHOTO_COVER;
-    String              mAbsolutePhotoPath_PHOTO_COVER;
-    String              mPhotoPath_PHOTO_COVER;
+    private  final int  request_code_CAMERA_COVER = 4;
+    File                mImageFile_CAMERA_COVER;
+    String              mAbsolutePhotoPath_CAMERA_COVER;
+    String              mPhotoPath_CAMERA_COVER;
 
     // PROVIDERS
     ImageProvider       mImageProvider;
@@ -147,26 +150,53 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        getUser();
+
     }
 
     private void getUser() {
-        mUsersProvider.getUser(mAuthProvider.getUid()).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mUsersProvider.getUser(mAuthProvider.getUid())
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
 
                 if (documentSnapshot.exists()) {
 
-                    mName   = documentSnapshot.getString("nombre");
-                    mInput_name.setText(mName);
+                    if (documentSnapshot.contains("nombre")) {
 
-                    mPhone  = documentSnapshot.getString("telefono");
-                    mInput_phone.setText(mPhone);
+                        mName   = documentSnapshot.getString("nombre");
+                        mInput_name.setText(mName);
+                    }
 
-                    String imageProfile = documentSnapshot.getString("profile_image");
-                    String imageCover = documentSnapshot.getString("cover_image");
+                    if (documentSnapshot.contains("telefono")){
 
-                    Picasso.with(EditProfileActivity.this).load(imageProfile).into(mImageView_PROFILE);
-                    Picasso.with(EditProfileActivity.this).load(imageCover).into(mImageView_COVER);
+                        mPhone  = documentSnapshot.getString("telefono");
+                        mInput_phone.setText(mPhone);
+                    }
+
+                    if (documentSnapshot.contains("profile_image")){
+
+                        mProfileImage = documentSnapshot.getString("profile_image");
+
+                        if (mProfileImage != null){
+                            if (!mProfileImage.isEmpty()){
+                                Picasso.with(EditProfileActivity.this).load(mProfileImage).into(mImageView_PROFILE);
+                            }
+                        }
+                    }
+
+                    if (documentSnapshot.contains("cover_image")){
+
+                        mCoverImage = documentSnapshot.getString("cover_image");
+
+                        if (mCoverImage != null) {
+                            if (!mCoverImage.isEmpty()){
+
+                                Picasso.with(EditProfileActivity.this).load(mCoverImage).into(mImageView_COVER);
+                            }
+                        }
+
+                    }
                 }
             }
         });
@@ -195,12 +225,12 @@ public class EditProfileActivity extends AppCompatActivity {
                         // PERFIL
                     if (whichImage.equals("PROFILE")){
 
-                        takePhoto(request_code_PHOTO_PROFILE);
+                        takePhoto(request_code_CAMERA_PROFILE);
 
                         // PORTADA
                     } else if (whichImage.equals("COVER")){
 
-                        takePhoto(request_code_PHOTO_COVER);
+                        takePhoto(request_code_CAMERA_COVER);
 
                     }
 
@@ -248,14 +278,14 @@ public class EditProfileActivity extends AppCompatActivity {
                 storageDir
         );
 
-        if (requestCode == request_code_PHOTO_PROFILE) {
+        if (requestCode == request_code_CAMERA_PROFILE) {
 
-            mPhotoPath_PHOTO_PROFILE = "file:" + photoFile.getAbsolutePath();
-            mAbsolutePhotoPath_PHOTO_PROFILE  =  photoFile.getAbsolutePath();
+            mPhotoPath_CAMERA_PROFILE = "file:" + photoFile.getAbsolutePath();
+            mAbsolutePhotoPath_CAMERA_PROFILE =  photoFile.getAbsolutePath();
 
-        } else if (requestCode == request_code_PHOTO_COVER) {
-            mPhotoPath_PHOTO_COVER = "file:" + photoFile.getAbsolutePath();
-            mAbsolutePhotoPath_PHOTO_COVER  =  photoFile.getAbsolutePath();
+        } else if (requestCode == request_code_CAMERA_COVER) {
+            mPhotoPath_CAMERA_COVER = "file:" + photoFile.getAbsolutePath();
+            mAbsolutePhotoPath_CAMERA_COVER =  photoFile.getAbsolutePath();
         }
 
         return photoFile;
@@ -268,6 +298,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // GALLERY PROFILE
         if (requestCode == request_code_GALLERY_PROFILE && resultCode == RESULT_OK) {
+
+            mImageFile_CAMERA_PROFILE = null;
 
             try {
 
@@ -287,6 +319,8 @@ public class EditProfileActivity extends AppCompatActivity {
         // GALLERY COVER
         if (requestCode == request_code_GALLERY_COVER && resultCode == RESULT_OK) {
 
+            mImageFile_CAMERA_COVER = null;
+
             try {
 
                 //transformar la URI en el archivo mImageFile2
@@ -303,17 +337,21 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         // CAMERA PROFILE
-        if (requestCode == request_code_PHOTO_PROFILE && resultCode == RESULT_OK){
+        if (requestCode == request_code_CAMERA_PROFILE && resultCode == RESULT_OK){
 
-            mPhotoFile_PHOTO_PROFILE = new File(mAbsolutePhotoPath_PHOTO_PROFILE);
-            Picasso.with(EditProfileActivity.this).load(mPhotoPath_PHOTO_PROFILE).into(mImageView_PROFILE);
+            mImageFile_GALLERY_PROFILE = null;
+
+            mImageFile_CAMERA_PROFILE = new File(mAbsolutePhotoPath_CAMERA_PROFILE);
+            Picasso.with(EditProfileActivity.this).load(mPhotoPath_CAMERA_PROFILE).into(mImageView_PROFILE);
         }
 
         // CAMERA COVER
-        if (requestCode == request_code_PHOTO_COVER && resultCode == RESULT_OK){
+        if (requestCode == request_code_CAMERA_COVER && resultCode == RESULT_OK){
 
-            mPhotoFile_PHOTO_COVER = new File(mAbsolutePhotoPath_PHOTO_COVER);
-            Picasso.with(EditProfileActivity.this).load(mPhotoPath_PHOTO_COVER).into(mImageView_COVER);
+            mImageFile_GALLERY_COVER = null;
+
+            mImageFile_CAMERA_COVER = new File(mAbsolutePhotoPath_CAMERA_COVER);
+            Picasso.with(EditProfileActivity.this).load(mPhotoPath_CAMERA_COVER).into(mImageView_COVER);
 
         }
 
@@ -321,29 +359,55 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void clickEditProfile() {
 
+        mWaitDialog.show();
+
         mName = mInput_name.getText().toString();
         mPhone = mInput_phone.getText().toString();
 
         if (!mName.isEmpty() && !mPhone.isEmpty()){
 
             if (mImageFile_GALLERY_PROFILE != null && mImageFile_GALLERY_COVER != null){
-                // imagen 1 y 2 de la galería
-                saveImage(mImageFile_GALLERY_PROFILE,mImageFile_GALLERY_COVER);
+                // imagen de perfil y portada de la galería
+                saveBothImages(mImageFile_GALLERY_PROFILE,mImageFile_GALLERY_COVER);
 
-            } else if (mPhotoFile_PHOTO_PROFILE != null && mPhotoFile_PHOTO_COVER != null){
-                // imagen 1 y 2 de la camara
-                saveImage(mPhotoFile_PHOTO_PROFILE,mPhotoFile_PHOTO_COVER);
+            } else if (mImageFile_CAMERA_PROFILE != null && mImageFile_CAMERA_COVER != null){
+                // imagen de perfil y portada de la camara
+                saveBothImages(mImageFile_CAMERA_PROFILE, mImageFile_CAMERA_COVER);
 
-            } else if (mImageFile_GALLERY_PROFILE != null && mPhotoFile_PHOTO_COVER != null){
-                // imagen 1 de la galería y 2 de la camara
-                saveImage(mImageFile_GALLERY_PROFILE,mPhotoFile_PHOTO_COVER);
+            } else if (mImageFile_GALLERY_PROFILE != null && mImageFile_CAMERA_COVER != null){
+                // imagen de perfil de la galería y portada de la camara
+                saveBothImages(mImageFile_GALLERY_PROFILE, mImageFile_CAMERA_COVER);
 
-            } else if (mPhotoFile_PHOTO_PROFILE != null && mImageFile_GALLERY_COVER!= null){
-                // imagen 1 de la camara y 2 de la galeria
-                saveImage(mPhotoFile_PHOTO_PROFILE,mImageFile_GALLERY_COVER);
+            } else if (mImageFile_CAMERA_PROFILE != null && mImageFile_GALLERY_COVER!= null){
+                // imagen de perfil de la camara y portada de la galeria
+                saveBothImages(mImageFile_CAMERA_PROFILE,mImageFile_GALLERY_COVER);
 
-            }  else {
-                Toast.makeText(this, "Debes seleccionar dos imágenes", Toast.LENGTH_SHORT).show();
+            }  else if (mImageFile_CAMERA_PROFILE != null){
+                // sólo imagen de perfil de la camara
+                saveSingleImage(mImageFile_CAMERA_PROFILE, true);
+
+            }  else if (mImageFile_GALLERY_PROFILE != null){
+                // sólo imagen de perfil de la galería
+                saveSingleImage(mImageFile_GALLERY_PROFILE, true);
+
+            }   else if (mImageFile_CAMERA_COVER != null){
+                // sólo imagen de portada de la camara
+                saveSingleImage(mImageFile_CAMERA_COVER, false);
+            }
+            else if (mImageFile_GALLERY_COVER != null){
+                // sólo imagen de portada de la galería
+                saveSingleImage(mImageFile_GALLERY_COVER, false);
+            } else {
+                User user = new User();
+                user.setId(mAuthProvider.getUid());
+                user.setNombre(mName);
+                user.setTelefono(mPhone);
+                user.setProfile_image(mProfileImage);
+                user.setCover_image(mCoverImage);
+                updateUserProfile(user);
+
+                mWaitDialog.dismiss();
+                Toast.makeText(this, "Datos actualizados", Toast.LENGTH_SHORT).show();
             }
 
         } else {
@@ -353,93 +417,145 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    private void saveImage( File imageFile1, File imageFile2) {
+    private void saveBothImages(File imageFile1, File imageFile2) {
 
-        mWaitDialog.show();
 
         mImageProvider.save(EditProfileActivity.this, imageFile1)
-                .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()){
+        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()){
 
-                            // La imagen 1 se guardó correctamente en storage
+                    // La imagen 1 se guardó correctamente en storage
 
-                            // obtener url de imagen 1
-                            mImageProvider.getStorage().getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
+                    // obtener url de imagen 1
+                    mImageProvider.getStorage().getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
 
-                                            final String url_Profile = uri.toString();
+                            final String url_Profile = uri.toString();
 
-                                            //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
+                            //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
 
-                                            //guardar imagen 2:
-                                            mImageProvider.save(EditProfileActivity.this, imageFile2)
-                                                    .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
-                                                            if (task2.isSuccessful()) {
+                            //guardar imagen 2:
+                            mImageProvider.save(EditProfileActivity.this, imageFile2)
+                            .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task2) {
+                                    if (task2.isSuccessful()) {
 
-                                                                // la imagen 2 se guardó correctamente
+                                        // la imagen 2 se guardó correctamente
 
-                                                                //obtener url de imagen 2
-                                                                mImageProvider.getStorage().getDownloadUrl()
-                                                                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                                                            @Override
-                                                                            public void onSuccess(Uri uri2) {
+                                        //obtener url de imagen 2
+                                        mImageProvider.getStorage().getDownloadUrl()
+                                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                    @Override
+                                                    public void onSuccess(Uri uri2) {
 
-                                                                                String url_Cover = uri2.toString();
+                                                        String url_Cover = uri2.toString();
 
-                                                                                // ya se guardaron ambas imagenes y tengo ambas url's
-                                                                                // ahora PUBLICAR (GUARDAR los datos de la publicación en la base de datos)
+                                                        // ya se guardaron ambas imagenes y tengo ambas url's
+                                                        // ahora PUBLICAR (GUARDAR los datos de la publicación en la base de datos)
 
-                                                                                User mUser = new User();
-                                                                                mUser.setNombre(mName);
-                                                                                mUser.setTelefono(mPhone);
-                                                                                mUser.setProfile_image(url_Profile);
-                                                                                mUser.setCover_image(url_Cover);
-                                                                                mUser.setId(mAuthProvider.getUid());
+                                                        User user = new User();
+                                                        user.setNombre(mName);
+                                                        user.setTelefono(mPhone);
+                                                        user.setProfile_image(url_Profile);
+                                                        user.setCover_image(url_Cover);
+                                                        user.setId(mAuthProvider.getUid());
 
+                                                        updateUserProfile(user);
+                                                    }
+                                                });
 
-                                                                                mUsersProvider.update(mUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<Void> taskSave) {
+                                    } else {
+                                        mWaitDialog.dismiss();
+                                        Toast.makeText(EditProfileActivity.this, "Error al guardar la imagen de portada", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
 
-                                                                                        mWaitDialog.dismiss();
-
-                                                                                        if (taskSave.isSuccessful()){
-                                                                                            Toast.makeText(EditProfileActivity.this, "La información se actualizó correctamente", Toast.LENGTH_LONG).show();
-
-                                                                                            //clearForm();
-
-                                                                                        } else {
-                                                                                            Toast.makeText(EditProfileActivity.this, "No se pudo actualizar la información", Toast.LENGTH_LONG).show();
-                                                                                        }
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        });
-
-                                                            } else {
-                                                                mWaitDialog.dismiss();
-                                                                Toast.makeText(EditProfileActivity.this, "Error al guardar la imagen de portada", Toast.LENGTH_LONG).show();
-                                                            }
-                                                        }
-                                                    });
-
-                                        }
-                                    });
-
-                        } else {
-                            mWaitDialog.dismiss();
-                            Toast.makeText(EditProfileActivity.this, "Error al almacenar la imagen de perfil", Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
+                    });
+
+                } else {
+                    mWaitDialog.dismiss();
+                    Toast.makeText(EditProfileActivity.this, "Error al almacenar la imagen de perfil", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
     }
 
-    //Comienza nuevo branch
+    private void saveSingleImage(File imageFile, boolean isProfileImage){
+
+        mImageProvider.save(EditProfileActivity.this, imageFile)
+        .addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()){
+
+                    // La imagen 1 se guardó correctamente en storage
+
+                    // obtener url de imagen
+                    mImageProvider.getStorage().getDownloadUrl()
+                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+
+                            final String url = uri.toString();
+
+                            User user = new User();
+
+                            user.setId(mAuthProvider.getUid());
+                            user.setNombre(mName);
+                            user.setTelefono(mPhone);
+
+                            if (isProfileImage){
+                                user.setProfile_image(url);
+                                user.setCover_image(mCoverImage);
+
+                            } else {
+                                user.setCover_image(url);
+                                user.setProfile_image(mProfileImage);
+                            }
+
+                            updateUserProfile(user);
+                        }
+                    });
+
+                } else {
+                    mWaitDialog.dismiss();
+                    Toast.makeText(EditProfileActivity.this, "Error al almacenar la imagen de perfil", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
+
+    private void updateUserProfile(User user) {
+
+        if (mWaitDialog.isShowing()){
+            mWaitDialog.show();
+        }
+
+        mUsersProvider.update(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> taskSave) {
+
+                mWaitDialog.dismiss();
+
+                if (taskSave.isSuccessful()){
+                    Toast.makeText(EditProfileActivity.this, "La información se actualizó correctamente", Toast.LENGTH_LONG).show();
+
+                    //clearForm();
+
+                } else {
+                    Toast.makeText(EditProfileActivity.this, "No se pudo actualizar la información", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+    }
 }
