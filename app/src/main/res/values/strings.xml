@@ -27,4 +27,13 @@
     <string name="xbox">XBox</string>
     <string name="publicar">PUBLICAR</string>
     <string name="categorias">CATEGORIAS</string>
+    <string name="titulo_de_juego">Titulo de Juego</string>
+    <string name="descripcion_del_juego">Descripción del juego</string>
+    <string name="fragment_home">fragment home</string>
+    <string name="telefono">Teléfono</string>
+
+    <string name="transitionname_picture">transitionnamepicture</string>
+    <string name="editar_perfil">EDITAR PERFIL</string>
+
+
 </resources>

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,18 +17,15 @@ import com.ferbook.providers.UsersProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 
 import dmax.dialog.SpotsDialog;
 
 public class CompleteProfileActivity extends AppCompatActivity {
 
     Button              btn_actualizar;
-    TextInputEditText   tv_nombre;
+    TextInputEditText   tv_nombre, tv_telefono;
 
     Authprovider        mAuthProvider;
     UsersProvider       mUsersProvider;
@@ -55,7 +51,9 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
     private void set_inputs() {
+
         tv_nombre = findViewById(R.id.input_nombre);
+        tv_telefono = findViewById(R.id.input_telefono);
     }
 
     private void set_btn_actualizar () {
@@ -66,12 +64,13 @@ public class CompleteProfileActivity extends AppCompatActivity {
 
                 mDialog.show();
 
-                String nombre = tv_nombre.getText().toString();
+                String nombre   = tv_nombre.getText().toString();
+                String telefono = tv_telefono.getText().toString();
 
                 // Validaciones de los campos de texto:
                 if (!nombre.isEmpty()) {
 
-                    actualizar_usuario(nombre);
+                    actualizar_usuario(nombre, telefono);
 
                 } else {
                     Toast.makeText(CompleteProfileActivity.this, "Completá todos los campos", Toast.LENGTH_LONG).show();
@@ -82,15 +81,17 @@ public class CompleteProfileActivity extends AppCompatActivity {
     }
 
 
-    private void actualizar_usuario(String nombre) {
+    private void actualizar_usuario(String nombre, String telefono) {
 
         String id = mAuthProvider.getUid();
 
         User user = new User();
         user.setId(id);
         user.setNombre(nombre);
+        user.setTelefono(telefono);
+        user.setTimestamp(new Date().getTime());
 
-        mUsersProvider.updateNombre(user)
+        mUsersProvider.update(user)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

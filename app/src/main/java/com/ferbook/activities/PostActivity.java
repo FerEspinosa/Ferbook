@@ -80,13 +80,13 @@ public class PostActivity extends AppCompatActivity {
     
     //foto 1
     private  final int  photo_request_code_1 = 3;
-    File                mPhotoFile1 = null;
+    File                mPhotoFile1;
     String              mAbsolutePhotoPath1;
     String              mPhotoPath1;
 
     //foto 2
     private  final int  photo_request_code_2 = 4;
-    File                mPhotoFile2 = null;
+    File                mPhotoFile2;
     String              mAbsolutePhotoPath2;
     String              mPhotoPath2;
 
@@ -127,6 +127,14 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+        mButtonPost = findViewById(R.id.btn_publicar);
+        mButtonPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clickPost();
+            }
+        });
+
         mImgView_Post1 = findViewById(R.id.iv_post1);
         mImgView_Post1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,13 +151,7 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-        mButtonPost = findViewById(R.id.btn_publicar);
-        mButtonPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clickPost();
-            }
-        });
+
 
         iv_PC.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,7 +186,7 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    private void selectOptionImage(int imageNumber) {
+    private void selectOptionImage(final int imageNumber) {
         mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -317,7 +319,7 @@ public class PostActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Uri uri) {
 
-                                    String url1 = uri.toString();
+                                    final String url1 = uri.toString();
 
                                     //Una vez guardada la imagen 1 y obtenida su Url, hacer lo mismo con imagen 2:
 
@@ -348,6 +350,7 @@ public class PostActivity extends AppCompatActivity {
                                                         post.setDescripcion(mDescription);
                                                         post.setCategory(mCategory);
                                                         post.setId(mAuthProvider.getUid());
+                                                        post.setTimestamp(new Date().getTime());
 
                                                         mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
@@ -416,9 +419,8 @@ public class PostActivity extends AppCompatActivity {
         // seleccion de imagen 1 desde la galeria
         if (requestCode == gallery_request_code_1 && resultCode == RESULT_OK) {
 
-            mPhotoFile1 = null;
-
             try {
+                mPhotoFile1 = null;
                 //transformar la URI en el archivo mImageFile
                 mImageFile1 = FileUtil.from(this, data.getData());
 
@@ -435,10 +437,10 @@ public class PostActivity extends AppCompatActivity {
         // seleccion de imagen 2 desde la galeria
         if (requestCode == gallery_request_code_2 && resultCode == RESULT_OK) {
 
-            mPhotoFile2 = null;
-
             try {
-                //transformar la URI en el archivo mImageFile
+
+                mPhotoFile2 = null;
+                //transformar la URI en el archivo mImageFile2
                 mImageFile2 = FileUtil.from(this, data.getData());
 
                 // mostrar la imagen en el primer cardview (Post1)
@@ -467,4 +469,5 @@ public class PostActivity extends AppCompatActivity {
         }
 
     }
+
 }
