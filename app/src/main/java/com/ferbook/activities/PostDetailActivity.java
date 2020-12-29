@@ -73,7 +73,6 @@ public class PostDetailActivity extends AppCompatActivity {
 
         //configurar animacion
 
-
         mSliderAdapter = new SliderAdapter(PostDetailActivity.this, mSliderItems);
         mSliderView.setSliderAdapter(mSliderAdapter);
 
