@@ -21,7 +21,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?android:attr/colorPressedHighlight"/>
+            android:background="@color/casiNegro"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -31,7 +31,7 @@
             android:textAlignment="center"
             android:textStyle="bold"
             android:textSize="25sp"
-            android:textColor="@color/black"/>
+            android:textColor="@color/violetaClaro"/>
 
 
     </com.github.florent37.shapeofview.shapes.ArcView>
@@ -113,13 +113,14 @@
             android:id="@+id/btn_actualizar"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
             android:layout_gravity="center"
-            android:text="@string/actualizar"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:layout_marginTop="45dp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="?android:attr/colorPressedHighlight"/>
+            android:backgroundTint="@color/violetaOscuro"
+            android:text="@string/actualizar"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/rosaClaro"/>
 
     </LinearLayout>
 
@@ -130,8 +131,8 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="110dp"
         android:elevation="4dp"
-        app:civ_border_color="@color/white"
-        app:civ_border_width="2dp"
-        app:civ_circle_background_color="@android:color/holo_red_dark"/>
+        app:civ_border_color="@color/rosaClaro"
+        app:civ_border_width="3dp"
+        app:civ_circle_background_color="@color/rosa"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

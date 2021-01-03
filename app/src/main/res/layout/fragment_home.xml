@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment"
-    android:layout_marginBottom="50dp">
+    android:layout_marginBottom="50dp"
+    android:background="@color/casiNegro">
 
     <include layout="@layout/action_bar_toolbar"/>
 
@@ -33,7 +34,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="15dp"
         android:src="@drawable/ic_signo_mas"
-        android:backgroundTint="@color/red"
+        app:backgroundTint="@color/rosa"
         android:contentDescription="@string/app_name" />
 
 

@@ -8,13 +8,14 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="230dp"
-        android:orientation="vertical">
+        android:layout_height="250dp"
+        android:orientation="vertical"
+        android:background="@color/grisOscuro">
 
         <ImageView
             android:id="@+id/iv_postCard"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="170dp"
             android:scaleType="centerCrop"/>
 
         <TextView
@@ -27,6 +28,7 @@
             android:paddingEnd="10dp"
             android:textStyle="bold"
             android:textSize="16sp"
+            android:textColor="@color/white"
             android:maxLines="1" />
 
         <TextView
@@ -34,6 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/descripcion_del_juego"
+            android:textColor="@color/rosaClaro"
             android:layout_margin="10dp"/>
 
 

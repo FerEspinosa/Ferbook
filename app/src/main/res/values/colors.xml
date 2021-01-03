@@ -12,5 +12,14 @@
     <color name="lightgray">#DCDCDC</color>
     <color name="darkBlue">#071843</color>
 
+    <color name="violetaClaro">#ACA9C7</color>
+    <color name="violetaOscuro">#220044</color>
+    <color name="rosa">#BB005E</color>
+    <color name="rosaClaro">#D4C0CE</color>
+    <color name="casiNegro">#0E0F12</color>
+    <color name="grisOscuro">#18191B</color>
+
+
+
 
 </resources>

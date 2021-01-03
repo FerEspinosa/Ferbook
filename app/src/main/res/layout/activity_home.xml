@@ -18,9 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/black"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
+            android:background="@color/casiNegro"
+            app:itemIconTint="@color/violetaClaro"
+            app:itemTextColor="@color/violetaClaro"
             app:menu="@menu/bottom_navigation_menu"
             />
     </FrameLayout>

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.EditProfileActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/casiNegro">
 
     <View
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:src="@drawable/ic_profile"
-        app:civ_circle_background_color="@color/gray"
+        app:civ_circle_background_color="@color/rosa"
         android:layout_marginTop="140dp"
         app:civ_border_color="@color/white"
         app:civ_border_width="5dp"/>
@@ -62,6 +63,7 @@
                     android:id="@+id/input_nombre"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:theme="@style/editTextWhite"
                     android:hint="@string/nombre"
                     android:inputType="textPersonName"
                     android:nextFocusForward="@id/input_email"/>
@@ -95,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/telefono"
                     android:inputType="phone"
+                    android:theme="@style/editTextWhite"
                     android:nextFocusForward="@id/btn_registrar"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -112,7 +115,7 @@
             android:textStyle="bold"
             android:textSize="20sp"
             android:background="@drawable/rounded_button"
-            android:backgroundTint="@color/red"/>
+            android:backgroundTint="@color/violetaOscuro"/>
 
     </LinearLayout>
 

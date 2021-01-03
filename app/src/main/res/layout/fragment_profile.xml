@@ -4,12 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.ProfileFragment">
+    tools:context=".fragments.ProfileFragment"
+    android:background="@color/casiNegro">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        android:background="@color/casiNegro">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -117,7 +118,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nombre del Perfil"
-                        android:textColor="@color/darkBlue"
+                        android:textColor="@color/violetaClaro"
+                        android:textAllCaps="true"
                         android:textStyle="bold"
                         android:textSize="20sp" />
 
@@ -126,7 +128,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="correo@algo.com"
-                        android:textColor="@color/darkBlue"
+                        android:textColor="@color/rosaClaro"
                         android:textStyle="bold"
                         android:textSize="15sp" />
 
@@ -180,7 +182,9 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:textSize="18sp"
-            android:textStyle="italic"/>
+            android:textStyle="italic"
+            android:textColor="@color/rosaClaro"
+            android:layout_gravity="center_horizontal"/>
 
     </androidx.core.widget.NestedScrollView>
 

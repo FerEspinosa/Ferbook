@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Publicaciones");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("PUBLICACIONES");
 
         setHasOptionsMenu(true);
         mAuthprovider = new Authprovider();

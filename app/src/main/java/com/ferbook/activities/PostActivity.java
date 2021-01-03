@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,8 +43,8 @@ import dmax.dialog.SpotsDialog;
 
 public class PostActivity extends AppCompatActivity {
 
-    TextInputEditText   mTextInputTitle;
-    TextInputEditText   mTextInputDescription;
+    EditText            tv_title;
+    EditText            mTextInputDescription;
     TextView            tv_category;
 
     String              mCategory="", mTitle="", mDescription="";
@@ -105,7 +106,7 @@ public class PostActivity extends AppCompatActivity {
         iv_PlayStation          = findViewById(R.id.iv_playstation);
         iv_Nintendo             = findViewById(R.id.iv_nintendo);
         iv_Xbox                 = findViewById(R.id.iv_xbox);
-        mTextInputTitle         = findViewById(R.id.input_juego);
+        tv_title                = findViewById(R.id.input_juego);
         mTextInputDescription   = findViewById(R.id.input_descripcion);
         tv_category             = findViewById(R.id.tv_categoria);
 
@@ -269,7 +270,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void clickPost() {
 
-        mTitle = mTextInputTitle.getText().toString();
+        mTitle = tv_title.getText().toString();
         mDescription = mTextInputDescription.getText().toString();
 
         if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){
@@ -390,7 +391,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void clearForm() {
 
-        mTextInputTitle.setText("");
+        tv_title.setText("");
         mTextInputDescription.setText("");
         tv_category.setText("");
         mImgView_Post1.setImageResource(R.drawable.upload_image);
