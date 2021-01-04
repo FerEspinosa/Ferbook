@@ -30,7 +30,6 @@ import com.ferbook.utils.FileUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
@@ -350,7 +349,7 @@ public class PostActivity extends AppCompatActivity {
                                                         post.setTitulo(mTitle);
                                                         post.setDescripcion(mDescription);
                                                         post.setCategory(mCategory);
-                                                        post.setId(mAuthProvider.getUid());
+                                                        post.setIdUser(mAuthProvider.getUid());
                                                         post.setTimestamp(new Date().getTime());
 
                                                         mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {

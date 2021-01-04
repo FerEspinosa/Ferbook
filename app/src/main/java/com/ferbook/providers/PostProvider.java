@@ -26,10 +26,10 @@ public class PostProvider {
 
     // En el siguiente método, el parámetro "id" se refiere al "id" del usuario
     // Y recupera TODOS los postS de ese usuario
-    public Query getPostsByUser(String id) {
+    public Query getPostsByUser(String idUser) {
 
         // devuelve todos los documentos donde el campo "id" sea igual al id que se pasa por parámetro
-        return mCollection.whereEqualTo("id", id);
+        return mCollection.whereEqualTo("idUser", idUser);
     }
 
     // En el siguiente método, el parámetro "id" se refiere al "id" del POST que quiero obtener

@@ -8,152 +8,173 @@
     tools:context=".activities.PostDetailActivity"
     android:background="@color/black">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <com.smarteist.autoimageslider.SliderView
-            android:id="@+id/imageSlider"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:sliderAnimationDuration="600"
-            app:sliderAutoCycleDirection="back_and_forth"
-            app:sliderAutoCycleEnabled="true"
-            app:sliderIndicatorAnimationDuration="600"
-            app:sliderIndicatorGravity="center_horizontal|bottom"
-            app:sliderIndicatorMargin="15dp"
-            app:sliderIndicatorOrientation="horizontal"
-            app:sliderIndicatorPadding="3dp"
-            app:sliderIndicatorRadius="2dp"
-            app:sliderIndicatorSelectedColor="#5A5A5A"
-            app:sliderIndicatorUnselectedColor="#FFF"
-            app:sliderScrollTimeInSec="1"
-            app:sliderStartAutoCycle="true" />
-
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_margin="45dp"
-            android:elevation="3dp"
-            android:backgroundTint="@color/grisOscuro">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:src="@drawable/cover_image"
-                    app:civ_border_color="@color/violetaClaro"
-                    app:civ_border_width="3dp"
-                    android:layout_marginStart="15dp"/>
-
-                <LinearLayout
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginStart="15dp">
-
-                    <TextView
-                        android:id="@+id/tv_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/nombre"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"/>
-
-                    <TextView
-                        android:id="@+id/tv_phone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="3515646568"
-                        android:textColor="@color/white"/>
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/button_ver_perfil"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="@string/ver_perfil"
-                    android:textSize="12dp"
-                    android:background="@drawable/button_border"
-                    android:textColor="@color/white"
-                    android:padding="11dp"
-                    android:layout_marginEnd="15dp"/>
-
-            </LinearLayout>
-
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/tv_titulo_de_juego"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/titulo_de_juego"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textColor="@color/white"/>
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/icon_nintendo"
-                android:layout_marginStart="20dp"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="320dp">
+
+                <com.smarteist.autoimageslider.SliderView
+                    android:id="@+id/imageSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:sliderAnimationDuration="600"
+                    app:sliderAutoCycleDirection="back_and_forth"
+                    app:sliderAutoCycleEnabled="true"
+                    app:sliderIndicatorAnimationDuration="600"
+                    app:sliderIndicatorGravity="center_horizontal|bottom"
+                    app:sliderIndicatorMargin="15dp"
+                    app:sliderIndicatorOrientation="horizontal"
+                    app:sliderIndicatorPadding="3dp"
+                    app:sliderIndicatorRadius="2dp"
+                    app:sliderIndicatorSelectedColor="#5A5A5A"
+                    app:sliderIndicatorUnselectedColor="#FFF"
+                    app:sliderScrollTimeInSec="1"
+                    app:sliderStartAutoCycle="true" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingButton_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_chat"
+                    android:layout_gravity="right|bottom"
+                    android:layout_marginEnd="15dp"
+                    android:backgroundTint="@color/rosa"
+                    app:borderWidth="0dp"/>
+
+            </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="45dp"
+                android:elevation="3dp"
+                android:backgroundTint="@color/grisOscuro">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/circleImageView_ProfileImage"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:src="@drawable/cover_image"
+                        app:civ_border_color="@color/violetaClaro"
+                        app:civ_border_width="3dp"
+                        android:layout_marginStart="15dp"/>
+
+                    <LinearLayout
+                        android:layout_width="130dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="15dp">
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nombre"
+                            android:textStyle="bold"
+                            android:textColor="@color/white"/>
+
+                        <TextView
+                            android:id="@+id/tv_phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="3515646568"
+                            android:textColor="@color/white"/>
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/button_ver_perfil"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:text="@string/ver_perfil"
+                        android:textSize="12dp"
+                        android:background="@drawable/button_border"
+                        android:textColor="@color/white"
+                        android:padding="11dp"
+                        android:layout_marginEnd="15dp"/>
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
-                android:id="@+id/tv_consola"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_titulo_de_juego"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/nintendo"
-                android:textColor="@color/white"
-                android:layout_marginStart="10dp"/>
+                android:text="@string/titulo_de_juego"
+                android:textSize="20dp"
+                android:textStyle="bold"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/white"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp">
+
+                <ImageView
+                    android:id="@+id/imageView_consola"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/icon_nintendo"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:id="@+id/tv_consola"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nintendo"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="10dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/rosa"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"/>
+
+            <TextView
+                android:id="@+id/tv_descripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/rosaClaro"
+                android:layout_marginStart="40dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="40dp"
+                android:text="Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion. Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion.Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion."
+                />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/rosa"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"/>
+    </ScrollView>
 
-        <TextView
-            android:id="@+id/titulo_descripcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="DESCRIPCION"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="20dp"/>
 
-        <TextView
-            android:id="@+id/tv_descripcion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/rosaClaro"
-            android:layout_margin="20dp"
-            android:text="Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion."
-            />
-
-    </LinearLayout>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

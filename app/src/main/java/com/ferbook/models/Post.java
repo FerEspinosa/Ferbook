@@ -2,36 +2,34 @@ package com.ferbook.models;
 
 public class Post {
 
-    private String id;
+    private String idUser;
     private String titulo;
     private String descripcion;
     private String image1;
     private String image2;
     private String category;
-    private String usuario;
     private Long   timestamp;
 
     public Post () {
 
     }
 
-    public Post(String id, String titulo, String descripcion, String image1, String image2, String category, String usuario, Long timestamp) {
-        this.id          = id;
+    public Post(String idUser, String titulo, String descripcion, String image1, String image2, String category, Long timestamp) {
+        this.idUser      = idUser;
         this.titulo      = titulo;
         this.descripcion = descripcion;
         this.image1      = image1;
         this.image2      = image2;
         this.category    = category;
-        this.usuario     = usuario;
         this.timestamp   = timestamp;
     }
 
-    public String getId() {
-        return id;
+    public String getIdUser() {
+        return idUser;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setIdUser(String idUser) {
+        this.idUser = idUser;
     }
 
     public String getTitulo() {
@@ -72,14 +70,6 @@ public class Post {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
     }
 
     public Long getTimestamp() {
