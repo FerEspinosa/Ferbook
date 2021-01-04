@@ -2,17 +2,18 @@ package com.ferbook.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ferbook.R;
 import com.ferbook.adapters.SliderAdapter;
 import com.ferbook.models.SliderItem;
-import com.ferbook.models.User;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -47,6 +48,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
     CircleImageView     mImageView_Back_button;
 
+    String              mIdUser = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,6 @@ public class PostDetailActivity extends AppCompatActivity {
         mIv_profileImage    = findViewById(R.id.circleImageView_ProfileImage);
         mTv_name            = findViewById(R.id.tv_name);
         mTv_phone           = findViewById(R.id.tv_phone);
-        mBtn_viewProfile    = findViewById(R.id.button_ver_perfil);
         mTv_title           = findViewById(R.id.tv_titulo_de_juego);
         mIv_consola         = findViewById(R.id.imageView_consola);
         mTv_consola         = findViewById(R.id.tv_consola);
@@ -76,8 +78,30 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+        // BOTON VER PERFIL
+        mBtn_viewProfile    = findViewById(R.id.button_ver_perfil);
+        mBtn_viewProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToShowProfile();
+            }
+        });
+
+
         getPost();
 
+    }
+
+    private void goToShowProfile() {
+
+        if (!mIdUser.equals("")) {
+
+            Intent intent = new Intent(PostDetailActivity.this, UserProfileActivity.class);
+            intent.putExtra("idUser", mIdUser);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "El id del usuario no se ha cargado aún, prueba nuevamente en un momento", Toast.LENGTH_LONG).show();
+        }
     }
 
     private void getPost () {
@@ -128,8 +152,8 @@ public class PostDetailActivity extends AppCompatActivity {
                     }
 
                     if (documentSnapshot.contains("idUser")){
-                        String idUser = documentSnapshot.getString("idUser");
-                        getUserInfo(idUser);
+                        mIdUser = documentSnapshot.getString("idUser");
+                        getUserInfo(mIdUser);
                     }
 
                     setupSlider();
