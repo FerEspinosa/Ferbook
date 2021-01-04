@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,6 +45,9 @@ public class PostDetailActivity extends AppCompatActivity {
     TextView            mTv_consola;
     TextView            mTv_description;
 
+    CircleImageView     mImageView_Back_button;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +67,14 @@ public class PostDetailActivity extends AppCompatActivity {
         mTv_consola         = findViewById(R.id.tv_consola);
         mTv_description     = findViewById(R.id.tv_descripcion);
 
+        // BOTON ATRAS
+        mImageView_Back_button = findViewById(R.id.btn_atras);
+        mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         getPost();
 
