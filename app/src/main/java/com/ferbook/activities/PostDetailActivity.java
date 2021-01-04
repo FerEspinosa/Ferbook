@@ -2,12 +2,17 @@ package com.ferbook.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +22,7 @@ import com.ferbook.models.SliderItem;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -45,6 +51,7 @@ public class PostDetailActivity extends AppCompatActivity {
     ImageView           mIv_consola;
     TextView            mTv_consola;
     TextView            mTv_description;
+    FloatingActionButton mBtn_comment;
 
     CircleImageView     mImageView_Back_button;
 
@@ -69,6 +76,7 @@ public class PostDetailActivity extends AppCompatActivity {
         mTv_consola         = findViewById(R.id.tv_consola);
         mTv_description     = findViewById(R.id.tv_descripcion);
 
+
         // BOTON ATRAS
         mImageView_Back_button = findViewById(R.id.btn_atras);
         mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
@@ -79,7 +87,7 @@ public class PostDetailActivity extends AppCompatActivity {
         });
 
         // BOTON VER PERFIL
-        mBtn_viewProfile    = findViewById(R.id.button_ver_perfil);
+        mBtn_viewProfile = findViewById(R.id.button_ver_perfil);
         mBtn_viewProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,9 +95,60 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
+        // BOTON COMENTAR
+        mBtn_comment = findViewById(R.id.fab_comment);
+        mBtn_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                showDialogComment();
+            }
+        });
+
 
         getPost();
 
+    }
+
+    private void showDialogComment() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(PostDetailActivity.this);
+        alert.setTitle("Dejá un comentario");
+
+        EditText editText = new EditText(PostDetailActivity.this);
+        editText.setHint("Comentario");
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(36, 0, 36, 36);
+        editText.setLayoutParams(params);
+        RelativeLayout container = new RelativeLayout(PostDetailActivity.this);
+        RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        container.setLayoutParams(relativeParams);
+        container.addView(editText);
+
+        alert.setView(container);
+
+
+        alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String value = editText.getText().toString();
+            }
+        });
+
+        alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        alert.show();
     }
 
     private void goToShowProfile() {
