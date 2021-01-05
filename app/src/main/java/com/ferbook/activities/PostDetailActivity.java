@@ -1,5 +1,6 @@
 package com.ferbook.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -18,10 +19,15 @@ import android.widget.Toast;
 
 import com.ferbook.R;
 import com.ferbook.adapters.SliderAdapter;
+import com.ferbook.models.Comment;
 import com.ferbook.models.SliderItem;
+import com.ferbook.providers.Authprovider;
+import com.ferbook.providers.CommentProvider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -29,7 +35,9 @@ import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 
+import java.security.AuthProvider;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -42,6 +50,7 @@ public class PostDetailActivity extends AppCompatActivity {
     String              mExtraPostId;
     PostProvider        mPostProvider;
     UsersProvider       mUsersProvider;
+    Authprovider        mAuthProvider;
 
     CircleImageView     mIv_profileImage;
     TextView            mTv_name;
@@ -57,6 +66,8 @@ public class PostDetailActivity extends AppCompatActivity {
 
     String              mIdUser = "";
 
+    CommentProvider     mCommentProvider;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,9 @@ public class PostDetailActivity extends AppCompatActivity {
         mSliderView     = findViewById(R.id.imageSlider);
         mPostProvider   = new PostProvider();
         mUsersProvider  = new UsersProvider();
+        mCommentProvider= new CommentProvider();
+        mAuthProvider   = new Authprovider();
+
         mExtraPostId    = getIntent().getStringExtra("id");
 
         mIv_profileImage    = findViewById(R.id.circleImageView_ProfileImage);
@@ -133,11 +147,18 @@ public class PostDetailActivity extends AppCompatActivity {
 
         alert.setView(container);
 
-
         alert.setPositiveButton("ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String value = editText.getText().toString();
+                if (!value.isEmpty()){
+                    createComment(value);
+                    Toast.makeText(PostDetailActivity.this, value, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PostDetailActivity.this, "Ingresa un comentario", Toast.LENGTH_SHORT).show();
+                }
+
+
             }
         });
 
@@ -151,10 +172,28 @@ public class PostDetailActivity extends AppCompatActivity {
         alert.show();
     }
 
+    private void createComment(String value) {
+        Comment comment = new Comment();
+        comment.setComment(value);
+        comment.setPostId(mExtraPostId);
+        comment.setUserId(mAuthProvider.getUid());
+        comment.setTimestamp(new Date().getTime());
+
+        mCommentProvider.create(comment).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(PostDetailActivity.this, "El comentario se creó correctamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(PostDetailActivity.this, "No se pudo crear el comentario", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void goToShowProfile() {
 
         if (!mIdUser.equals("")) {
-
             Intent intent = new Intent(PostDetailActivity.this, UserProfileActivity.class);
             intent.putExtra("idUser", mIdUser);
             startActivity(intent);
