@@ -158,7 +158,6 @@ public class PostDetailActivity extends AppCompatActivity {
                     Toast.makeText(PostDetailActivity.this, "Ingresa un comentario", Toast.LENGTH_SHORT).show();
                 }
 
-
             }
         });
 
