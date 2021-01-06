@@ -2,6 +2,8 @@ package com.ferbook.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ferbook.R;
+import com.ferbook.adapters.CommentAdapter;
 import com.ferbook.adapters.SliderAdapter;
 import com.ferbook.models.Comment;
 import com.ferbook.models.SliderItem;
@@ -25,17 +28,18 @@ import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.CommentProvider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 
-import java.security.AuthProvider;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +70,10 @@ public class PostDetailActivity extends AppCompatActivity {
 
     String              mIdUser = "";
 
+    // SECCIÓN COMENTARIOS
     CommentProvider     mCommentProvider;
+    RecyclerView        mRecyclerViewComments;
+    CommentAdapter      mCommentAdapter;
 
 
     @Override
@@ -80,6 +87,7 @@ public class PostDetailActivity extends AppCompatActivity {
         mCommentProvider= new CommentProvider();
         mAuthProvider   = new Authprovider();
 
+
         mExtraPostId    = getIntent().getStringExtra("id");
 
         mIv_profileImage    = findViewById(R.id.circleImageView_ProfileImage);
@@ -89,6 +97,12 @@ public class PostDetailActivity extends AppCompatActivity {
         mIv_consola         = findViewById(R.id.imageView_consola);
         mTv_consola         = findViewById(R.id.tv_consola);
         mTv_description     = findViewById(R.id.tv_descripcion);
+
+        mRecyclerViewComments = findViewById(R.id.recyclerViewComments);
+        mRecyclerViewComments.setNestedScrollingEnabled(false);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
+        mRecyclerViewComments.setLayoutManager(linearLayoutManager);
 
 
         // BOTON ATRAS
@@ -122,6 +136,29 @@ public class PostDetailActivity extends AppCompatActivity {
 
         getPost();
 
+
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Query query = mCommentProvider.getCommentsByPost(mExtraPostId);
+        FirestoreRecyclerOptions<Comment> options =
+                new FirestoreRecyclerOptions.Builder<Comment>()
+                        .setQuery(query, Comment.class)
+                        .build();
+        mCommentAdapter = new CommentAdapter(options, PostDetailActivity.this);
+
+        mRecyclerViewComments.setAdapter(mCommentAdapter);
+        mCommentAdapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mCommentAdapter.stopListening();
     }
 
     private void showDialogComment() {

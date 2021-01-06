@@ -2,31 +2,22 @@ package com.ferbook.models;
 
 public class Comment {
 
-    private String id;
     private String comment;
     private String userId;
     private String postId;
-    long    timestamp;
+    private long   timestamp;
 
     public Comment () {
 
     }
 
-    public Comment(String id, String comment, String userId, String postId, long timestamp) {
-        this.id = id;
+    public Comment(String comment, String userId, String postId, long timestamp) {
         this.comment = comment;
         this.userId = userId;
         this.postId = postId;
         this.timestamp = timestamp;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getComment() {
         return comment;
