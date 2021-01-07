@@ -132,12 +132,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 showDialogComment();
             }
         });
-
-
         getPost();
-
-
-
     }
 
     @Override

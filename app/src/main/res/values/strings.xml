@@ -35,6 +35,7 @@
     <string name="transitionname_picture">transitionnamepicture</string>
     <string name="editar_perfil">EDITAR PERFIL</string>
     <string name="ver_perfil">VER PERFIL</string>
+    <string name="nombre_de_usuario">nombre de usuario</string>
 
 
 </resources>

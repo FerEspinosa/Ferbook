@@ -15,18 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ferbook.R;
 import com.ferbook.activities.PostDetailActivity;
 import com.ferbook.models.Post;
+import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.squareup.picasso.Picasso;
 
 public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.ViewHolder> {
 
     Context context;
+    UsersProvider mUsersProvider;
 
     public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
         this.context = context;
+        mUsersProvider = new UsersProvider();
     }
 
     @Override
@@ -36,6 +40,8 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
 
         String postId = document.getId();
+
+        getUserName(post.getIdUser(), holder);
 
         holder.tv_title.setText(post.getTitulo());
         holder.tv_description.setText(post.getDescripcion());
@@ -62,6 +68,20 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
 
     }
 
+    private void getUserName (String userId, ViewHolder holder) {
+        mUsersProvider.getUser(userId).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    if (documentSnapshot.contains("nombre")){
+                        String userName = documentSnapshot.getString("nombre");
+                        holder.tv_userName.setText("By: "+userName);
+                    }
+                }
+            }
+        });
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -71,9 +91,12 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tv_title;
-        TextView tv_description;
-        ImageView iv_img_post;
+        TextView    tv_title;
+        TextView    tv_description;
+        TextView    tv_userName;
+        ImageView   iv_img_post;
+        ImageView   iv_like;
+        TextView    tv_likeNumber;
 
         // agregado en leccion del video n°45
         View viewHolder;
@@ -84,6 +107,10 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
             tv_title = view.findViewById(R.id.tv_Postcard_Title);
             tv_description = view.findViewById(R.id.tv_Postcard_Description);
             iv_img_post = view.findViewById(R.id.iv_postCard);
+
+            iv_like = view.findViewById(R.id.iv_like);
+            tv_likeNumber = view.findViewById(R.id.tv_likeNumber);
+            tv_userName = view.findViewById(R.id.tv_Postcard_userName);
 
             viewHolder = view;
         }

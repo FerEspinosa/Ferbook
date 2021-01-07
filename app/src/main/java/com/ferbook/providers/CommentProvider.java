@@ -21,7 +21,7 @@ public class CommentProvider {
     public Query getCommentsByPost(String postId) {
 
         // devuelve todos los documentos donde el campo "postId" sea igual al postId pasado por parámetro
-        return mCollection.whereEqualTo("postId", postId);
+        return mCollection.whereEqualTo("postId", postId).orderBy("timestamp", Query.Direction.DESCENDING);
     }
 
 }
