@@ -14,23 +14,31 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ferbook.R;
 import com.ferbook.activities.PostDetailActivity;
+import com.ferbook.models.Like;
 import com.ferbook.models.Post;
+import com.ferbook.providers.LikesProviders;
 import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
+
+import java.util.Date;
 
 public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.ViewHolder> {
 
     Context context;
     UsersProvider mUsersProvider;
+    LikesProviders mLikesProviders;
 
     public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
-        this.context = context;
-        mUsersProvider = new UsersProvider();
+        this.context    = context;
+        mUsersProvider  = new UsersProvider();
+        mLikesProviders = new LikesProviders();
+
     }
 
     @Override
@@ -65,6 +73,42 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
                 context.startActivity(intent);
             }
         });
+
+        holder.iv_like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Like like = new Like();
+                like.setUserId(post.getIdUser());
+                like.setPostId(postId);
+                like.setTimestamp(new Date().getTime());
+                like(like, holder);
+            }
+        });
+
+    }
+
+    private void like(Like like, ViewHolder holder) {
+
+        mLikesProviders.getLikeByPostAndUser(like.getPostId(), like.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                int likeNumber = queryDocumentSnapshots.size();
+
+                if (likeNumber>0){
+                    // Si hay un like, borrarlo:
+                    String likeId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                    mLikesProviders.delete(likeId);
+                    holder.iv_like.setImageResource(R.drawable.corazon_gris);
+
+                } else {
+                    //si no hay ningún like, crearlo:
+                    mLikesProviders.create(like);
+                    holder.iv_like.setImageResource(R.drawable.corazon_rojo);
+                }
+            }
+        });
+
 
     }
 
@@ -104,13 +148,13 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
 
         public ViewHolder (View view){
             super(view);
-            tv_title = view.findViewById(R.id.tv_Postcard_Title);
-            tv_description = view.findViewById(R.id.tv_Postcard_Description);
-            iv_img_post = view.findViewById(R.id.iv_postCard);
+            tv_title        = view.findViewById(R.id.tv_Postcard_Title);
+            tv_description  = view.findViewById(R.id.tv_Postcard_Description);
+            iv_img_post     = view.findViewById(R.id.iv_postCard);
 
-            iv_like = view.findViewById(R.id.iv_like);
-            tv_likeNumber = view.findViewById(R.id.tv_likeNumber);
-            tv_userName = view.findViewById(R.id.tv_Postcard_userName);
+            iv_like         = view.findViewById(R.id.iv_like);
+            tv_likeNumber   = view.findViewById(R.id.tv_likeNumber);
+            tv_userName     = view.findViewById(R.id.tv_Postcard_userName);
 
             viewHolder = view;
         }
