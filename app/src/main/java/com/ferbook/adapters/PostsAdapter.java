@@ -10,18 +10,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ferbook.R;
 import com.ferbook.activities.PostDetailActivity;
 import com.ferbook.models.Like;
 import com.ferbook.models.Post;
+import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.LikesProviders;
 import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -29,15 +33,17 @@ import java.util.Date;
 
 public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.ViewHolder> {
 
-    Context context;
-    UsersProvider mUsersProvider;
-    LikesProviders mLikesProviders;
+    Context         context;
+    UsersProvider   mUsersProvider;
+    LikesProviders  mLikesProviders;
+    Authprovider    mAutheProvider;
 
     public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
         this.context    = context;
         mUsersProvider  = new UsersProvider();
         mLikesProviders = new LikesProviders();
+        mAutheProvider  = new Authprovider();
 
     }
 
@@ -50,6 +56,8 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
         String postId = document.getId();
 
         getUserName(post.getIdUser(), holder);
+
+        getLikeNumber(postId, holder);
 
         holder.tv_title.setText(post.getTitulo());
         holder.tv_description.setText(post.getDescripcion());
@@ -78,18 +86,20 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
             @Override
             public void onClick(View v) {
                 Like like = new Like();
-                like.setUserId(post.getIdUser());
+                like.setUserId(mAutheProvider.getUid());
                 like.setPostId(postId);
                 like.setTimestamp(new Date().getTime());
                 like(like, holder);
             }
         });
 
+        heartColor(postId, mAutheProvider.getUid(), holder);
+
     }
 
     private void like(Like like, ViewHolder holder) {
 
-        mLikesProviders.getLikeByPostAndUser(like.getPostId(), like.getUserId()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        mLikesProviders.getLikeByPostAndUser(like.getPostId(), mAutheProvider.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
@@ -108,8 +118,40 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
                 }
             }
         });
+    }
 
+    private void heartColor (String postId, String userId, ViewHolder holder) {
 
+        mLikesProviders.getLikeByPostAndUser(postId, userId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                int likeNumber = queryDocumentSnapshots.size();
+
+                if (likeNumber>0){
+                    // Si hay un like, poner el corazón rojo
+                    holder.iv_like.setImageResource(R.drawable.corazon_rojo);
+
+                } else {
+                    //si no hay ningún like, poner el corazon gris:
+                    holder.iv_like.setImageResource(R.drawable.corazon_gris);
+                }
+            }
+        });
+    }
+
+    private void getLikeNumber (String postId, ViewHolder holder) {
+        mLikesProviders.getLikesByPost(postId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                int likeNumber = value.size();
+                if (likeNumber==1){
+                    holder.tv_likeNumber.setText(String.valueOf("1 like"));
+                } else {
+                    holder.tv_likeNumber.setText(String.valueOf(likeNumber+" likes"));
+                }
+            }
+        });
     }
 
     private void getUserName (String userId, ViewHolder holder) {

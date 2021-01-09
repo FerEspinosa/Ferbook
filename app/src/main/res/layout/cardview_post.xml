@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="0 me gusta"
-                android:gravity="right"
+                android:gravity="left"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/rosaClaro"/>

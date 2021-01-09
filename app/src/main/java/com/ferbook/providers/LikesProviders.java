@@ -32,4 +32,8 @@ public class LikesProviders {
         return mCollection.document(likeId).delete();
     }
 
+    public Query getLikesByPost (String postId) {
+        return mCollection.whereEqualTo("postId", postId);
+    }
+
 }
