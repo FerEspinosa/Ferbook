@@ -50,7 +50,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Post post) {
 
-        // obtener el documento que contiene el Post mostrado en el cardView
+        // obtener el documento que contiene el Post para mostrar en el cardView
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
 
         String postId = document.getId();
@@ -73,8 +73,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
         holder.viewHolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(context, "Post id:"+postId, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent (context, PostDetailActivity.class);
                 intent.putExtra("id", postId);

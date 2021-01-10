@@ -50,6 +50,35 @@
                     android:backgroundTint="@color/rosa"
                     app:borderWidth="0dp"/>
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="30dp">
+
+                    <TextView
+                        android:id="@+id/tv_relativeTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hace_0_min"
+                        android:textColor="@color/white"
+                        android:layout_marginBottom="6dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_likesNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/_0_likes"
+                        android:textColor="@color/white"
+                        android:textStyle="italic"/>
+
+
+
+                </LinearLayout>
+
+
             </FrameLayout>
 
             <androidx.cardview.widget.CardView
@@ -87,7 +116,7 @@
                             android:id="@+id/tv_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/nombre"
+                            android:text="@string/empty_string"
                             android:textStyle="bold"
                             android:textColor="@color/white"/>
 
@@ -95,7 +124,7 @@
                             android:id="@+id/tv_phone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="3515646568"
+                            android:text="@string/empty_string"
                             android:textColor="@color/white"/>
 
                     </LinearLayout>
@@ -121,7 +150,7 @@
                 android:id="@+id/tv_titulo_de_juego"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/titulo_de_juego"
+                android:text="@string/empty_string"
                 android:textSize="20dp"
                 android:textStyle="bold"
                 android:layout_marginStart="20dp"
@@ -145,7 +174,7 @@
                     android:id="@+id/tv_consola"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/nintendo"
+                    android:text="@string/empty_string"
                     android:textColor="@color/white"
                     android:layout_marginStart="10dp"/>
 
@@ -168,8 +197,7 @@
                 android:layout_marginEnd="40dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:text="Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion. Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion.Texto de la descripcion. Este es un texto para rellenar la descripcion de uno de los juegos. Realmente este texto no tiene ninguna importancia, ya que va a ser reemplazado por el texto que escriba el usuario al hacer una publicacion."
-                />
+                android:text="@string/empty_string"/>
 
             <View
                 android:layout_width="match_parent"
@@ -184,7 +212,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Comentarios"
+                android:text="@string/comentarios"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 android:layout_marginStart="20dp"/>

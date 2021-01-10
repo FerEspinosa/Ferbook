@@ -1,6 +1,7 @@
 package com.ferbook.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,15 +27,20 @@ import com.ferbook.models.Comment;
 import com.ferbook.models.SliderItem;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.CommentProvider;
+import com.ferbook.providers.LikesProviders;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.ferbook.utils.RelativeTime;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -55,6 +61,7 @@ public class PostDetailActivity extends AppCompatActivity {
     PostProvider        mPostProvider;
     UsersProvider       mUsersProvider;
     Authprovider        mAuthProvider;
+    LikesProviders      mLikesProvider;
 
     CircleImageView     mIv_profileImage;
     TextView            mTv_name;
@@ -75,20 +82,24 @@ public class PostDetailActivity extends AppCompatActivity {
     RecyclerView        mRecyclerViewComments;
     CommentAdapter      mCommentAdapter;
 
+    TextView            mTv_relativeTime;
+    TextView            mTv_likesNumber;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_detail);
 
-        mSliderView     = findViewById(R.id.imageSlider);
-        mPostProvider   = new PostProvider();
-        mUsersProvider  = new UsersProvider();
-        mCommentProvider= new CommentProvider();
-        mAuthProvider   = new Authprovider();
+        mSliderView         = findViewById(R.id.imageSlider);
+        mPostProvider       = new PostProvider();
+        mUsersProvider      = new UsersProvider();
+        mCommentProvider    = new CommentProvider();
+        mAuthProvider       = new Authprovider();
+        mLikesProvider      = new LikesProviders();
 
 
-        mExtraPostId    = getIntent().getStringExtra("id");
+        mExtraPostId        = getIntent().getStringExtra("id");
 
         mIv_profileImage    = findViewById(R.id.circleImageView_ProfileImage);
         mTv_name            = findViewById(R.id.tv_name);
@@ -97,6 +108,8 @@ public class PostDetailActivity extends AppCompatActivity {
         mIv_consola         = findViewById(R.id.imageView_consola);
         mTv_consola         = findViewById(R.id.tv_consola);
         mTv_description     = findViewById(R.id.tv_descripcion);
+        mTv_relativeTime    = findViewById(R.id.tv_relativeTime);
+        mTv_likesNumber     = findViewById(R.id.tv_likesNumber);
 
         mRecyclerViewComments = findViewById(R.id.recyclerViewComments);
         mRecyclerViewComments.setNestedScrollingEnabled(false);
@@ -132,6 +145,7 @@ public class PostDetailActivity extends AppCompatActivity {
                 showDialogComment();
             }
         });
+
         getPost();
     }
 
@@ -272,8 +286,6 @@ public class PostDetailActivity extends AppCompatActivity {
                         } else if (category.equals("XBOX")){
                             mIv_consola.setImageResource(R.drawable.icon_xbox);
                         }
-
-
                     }
 
                     if (documentSnapshot.contains("descripcion")){
@@ -285,11 +297,35 @@ public class PostDetailActivity extends AppCompatActivity {
                         getUserInfo(mIdUser);
                     }
 
+                    if (documentSnapshot.contains("timestamp")){
+                        long timestamp = documentSnapshot.getLong("timestamp");
+                        String relativeTime = RelativeTime.getTimeAgo(timestamp, PostDetailActivity.this);
+                        mTv_relativeTime.setText(relativeTime);
+                    }
+
+                    getLikesNumber(mExtraPostId);
+
                     setupSlider();
 
                 }
             }
         });
+    }
+
+    private void getLikesNumber(String mExtraPostId) {
+        mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                int likesNumber = value.size();
+
+                if (likesNumber == 1){
+                    mTv_likesNumber.setText("1 like");
+                } else {
+                    mTv_likesNumber.setText(likesNumber+" likes");
+                }
+            }
+        });
+
     }
 
     private void getUserInfo(String idUser) {

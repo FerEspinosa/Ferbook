@@ -36,6 +36,10 @@
     <string name="editar_perfil">EDITAR PERFIL</string>
     <string name="ver_perfil">VER PERFIL</string>
     <string name="nombre_de_usuario">nombre de usuario</string>
+    <string name="hace_0_min">hace 0 min</string>
+    <string name="_0_likes">0 likes</string>
+    <string name="empty_string" />
+    <string name="comentarios">Comentarios</string>
 
 
 </resources>
