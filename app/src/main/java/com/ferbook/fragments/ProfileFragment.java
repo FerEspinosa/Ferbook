@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,15 @@ import android.widget.TextView;
 
 import com.ferbook.R;
 import com.ferbook.activities.EditProfileActivity;
+import com.ferbook.adapters.MyPostsAdapter;
+import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -42,6 +48,9 @@ public class ProfileFragment extends Fragment {
     UsersProvider   mUsersProvider;
     Authprovider    mAuthProvider;
     PostProvider    mPostProvider;
+
+    RecyclerView    mRecyclerView_myPosts;
+    MyPostsAdapter mPostsAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -68,6 +77,10 @@ public class ProfileFragment extends Fragment {
         iv_Cover        = mView.findViewById(R.id.iv_cover_image);
         civ_Profile     = mView.findViewById(R.id.circleImage_Profile);
 
+        mRecyclerView_myPosts = mView.findViewById(R.id.recyclerView_MyPosts);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView_myPosts.setLayoutManager(linearLayoutManager);
 
         mUsersProvider  = new UsersProvider();
         mAuthProvider   = new Authprovider();
@@ -133,6 +146,27 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Query query = mPostProvider.getPostsByUser(mAuthProvider.getUid());
+        FirestoreRecyclerOptions<Post> options =
+                new FirestoreRecyclerOptions.Builder<Post>()
+                        .setQuery(query, Post.class)
+                        .build();
+        mPostsAdapter = new MyPostsAdapter(options, getContext());
+
+        mRecyclerView_myPosts.setAdapter(mPostsAdapter);
+        mPostsAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPostsAdapter.stopListening();
     }
 
     private void getPostNumber () {
