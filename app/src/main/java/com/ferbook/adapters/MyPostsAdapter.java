@@ -1,12 +1,15 @@
 package com.ferbook.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,11 +21,14 @@ import com.ferbook.models.Like;
 import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.LikesProviders;
+import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.RelativeTime;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -39,6 +45,7 @@ public class MyPostsAdapter extends FirestoreRecyclerAdapter <Post, MyPostsAdapt
     UsersProvider   mUsersProvider;
     LikesProviders  mLikesProviders;
     Authprovider    mAutheProvider;
+    PostProvider    mPostProvider;
 
     public MyPostsAdapter(FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
@@ -46,6 +53,7 @@ public class MyPostsAdapter extends FirestoreRecyclerAdapter <Post, MyPostsAdapt
         mUsersProvider  = new UsersProvider();
         mLikesProviders = new LikesProviders();
         mAutheProvider  = new Authprovider();
+        mPostProvider   = new PostProvider();
 
     }
 
@@ -81,7 +89,44 @@ public class MyPostsAdapter extends FirestoreRecyclerAdapter <Post, MyPostsAdapt
             }
         });
 
+        holder.mIv_deletePost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                
+                showDeleteConfirmation(postId);
+            }
+        });
 
+    }
+
+    private void showDeleteConfirmation(String postId) {
+
+        new AlertDialog.Builder(context)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Eliminar publicación")
+                .setMessage("¿Estas seguro que querés eliminar esta publicación?")
+                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletePost(postId);
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void deletePost(String postId) {
+
+        mPostProvider.delete(postId).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    Toast.makeText(context, "La publicación se eliminó correctamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "No se pudo borra la publicación", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

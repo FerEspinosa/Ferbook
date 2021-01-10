@@ -29,7 +29,7 @@ public class PostProvider {
     public Query getPostsByUser(String idUser) {
 
         // devuelve todos los documentos donde el campo "id" sea igual al id que se pasa por parámetro
-        return mCollection.whereEqualTo("idUser", idUser).orderBy("timestamp", Query.Direction.DESCENDING);
+        return mCollection.whereEqualTo("idUser", idUser);
     }
 
     // En el siguiente método, el parámetro "id" se refiere al "id" del POST que quiero obtener
@@ -38,6 +38,10 @@ public class PostProvider {
 
         // devuelve el documento con el "id" que se pasa por parámetro
         return mCollection.document(id).get();
+    }
+
+    public Task <Void> delete (String postId) {
+        return mCollection.document(postId).delete();
     }
 
 }
