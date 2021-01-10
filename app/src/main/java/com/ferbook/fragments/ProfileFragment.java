@@ -3,6 +3,7 @@ package com.ferbook.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,6 +25,8 @@ import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -42,6 +45,7 @@ public class ProfileFragment extends Fragment {
     TextView        tv_Phone;
     TextView        tv_Email;
     TextView        tv_PostNumber;
+    TextView        tv_publicaciones;
     ImageView       iv_Cover;
     CircleImageView civ_Profile;
 
@@ -74,8 +78,10 @@ public class ProfileFragment extends Fragment {
         tv_Phone        = mView.findViewById(R.id.tv_phone);
         tv_Email        = mView.findViewById(R.id.tv_email);
         tv_PostNumber   = mView.findViewById(R.id.tv_postNumber);
+        tv_publicaciones= mView.findViewById(R.id.tv_no_hay_publicaciones);
         iv_Cover        = mView.findViewById(R.id.iv_cover_image);
         civ_Profile     = mView.findViewById(R.id.circleImage_Profile);
+
 
         mRecyclerView_myPosts = mView.findViewById(R.id.recyclerView_MyPosts);
 
@@ -88,8 +94,23 @@ public class ProfileFragment extends Fragment {
 
         getUser();
         getPostNumber();
+        doesUserExist();
 
         return mView;
+    }
+
+    private void doesUserExist() {
+        mPostProvider.getPostsByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (value.size()>0){
+                    tv_publicaciones.setText("Publicaciones:");
+                } else {
+                    tv_publicaciones.setText("No hay publicaciones");
+                }
+            }
+        });
     }
 
     private void goToEditProfile() {
@@ -178,8 +199,6 @@ public class ProfileFragment extends Fragment {
                 int post_number = queryDocumentSnapshots.size();
                 tv_PostNumber.setText(String.valueOf(post_number));
 
-                // Probar si funciona sin parsear el int a String
-                //tv_PostNumber.setText(post_number);
             }
         });
     }
