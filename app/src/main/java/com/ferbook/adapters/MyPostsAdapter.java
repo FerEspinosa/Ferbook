@@ -71,6 +71,15 @@ public class MyPostsAdapter extends FirestoreRecyclerAdapter <Post, MyPostsAdapt
 
         holder.mTv_PostTitle.setText(post.getTitulo());
 
+        // Validar que el usuario registrado es el dueño del perfil que está mostrando,
+        // para habilitarlo o no a borrar publicaciones (sólo puede borrar publicaciones propias)
+        if (post.getIdUser().equals(mAutheProvider.getUid())){
+            holder.mIv_deletePost.setVisibility(View.VISIBLE);
+        } else {
+            holder.mIv_deletePost.setVisibility(View.GONE);
+        }
+        //fin de validación
+
         if (post.getImage1()!=null){
             if (!post.getImage1().isEmpty()){
 

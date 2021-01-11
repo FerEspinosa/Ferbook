@@ -45,7 +45,8 @@ public class ProfileFragment extends Fragment {
     TextView        tv_Phone;
     TextView        tv_Email;
     TextView        tv_PostNumber;
-    TextView        tv_publicaciones;
+    TextView        tv_pub;
+    TextView        tv_txt_pub;
     ImageView       iv_Cover;
     CircleImageView civ_Profile;
 
@@ -54,7 +55,7 @@ public class ProfileFragment extends Fragment {
     PostProvider    mPostProvider;
 
     RecyclerView    mRecyclerView_myPosts;
-    MyPostsAdapter mPostsAdapter;
+    MyPostsAdapter  mPostsAdapter;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -78,9 +79,10 @@ public class ProfileFragment extends Fragment {
         tv_Phone        = mView.findViewById(R.id.tv_phone);
         tv_Email        = mView.findViewById(R.id.tv_email);
         tv_PostNumber   = mView.findViewById(R.id.tv_postNumber);
-        tv_publicaciones= mView.findViewById(R.id.tv_no_hay_publicaciones);
         iv_Cover        = mView.findViewById(R.id.iv_cover_image);
         civ_Profile     = mView.findViewById(R.id.circleImage_Profile);
+        tv_pub          = mView.findViewById(R.id.tv_no_hay_publicaciones);
+        tv_txt_pub      = mView.findViewById(R.id.tv_txt_publicaciones);
 
 
         mRecyclerView_myPosts = mView.findViewById(R.id.recyclerView_MyPosts);
@@ -94,20 +96,27 @@ public class ProfileFragment extends Fragment {
 
         getUser();
         getPostNumber();
-        doesUserExist();
 
         return mView;
     }
 
-    private void doesUserExist() {
+    private void getPostNumber() {
         mPostProvider.getPostsByUser(mAuthProvider.getUid()).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
 
-                if (value.size()>0){
-                    tv_publicaciones.setText("Publicaciones:");
-                } else {
-                    tv_publicaciones.setText("No hay publicaciones");
+                int post_number = value.size();
+                tv_PostNumber.setText(String.valueOf(post_number));
+
+                if (post_number==0){
+                    tv_pub.setText("No hay publicaciones");
+
+                } else if (post_number==1){
+                    tv_pub.setText("Publicaciones:");
+                    tv_txt_pub.setText("publicación");
+                } else if (post_number>1){
+                    tv_pub.setText("Publicaciones:");
+                    tv_txt_pub.setText("publicaciónes");
                 }
             }
         });
@@ -130,11 +139,11 @@ public class ProfileFragment extends Fragment {
                         tv_Name.setText(name);
                     }
 
-                    /*
+
                     if (documentSnapshot.contains("telefono")){
                         String phone = documentSnapshot.getString("telefono");
                         tv_Phone.setText(phone);
-                    }*/
+                    }
 
                     if (documentSnapshot.contains("email")){
 
@@ -190,16 +199,4 @@ public class ProfileFragment extends Fragment {
         mPostsAdapter.stopListening();
     }
 
-    private void getPostNumber () {
-        mPostProvider.getPostsByUser(mAuthProvider.getUid()).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-
-                //con el método ".size", obtenemos el número de publicaciones que llevan el id del usuario
-                int post_number = queryDocumentSnapshots.size();
-                tv_PostNumber.setText(String.valueOf(post_number));
-
-            }
-        });
-    }
 }

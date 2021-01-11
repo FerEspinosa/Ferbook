@@ -68,7 +68,7 @@
                         android:id="@+id/tv_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="351266546"
+                        android:text="@string/empty_string"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         android:textSize="15sp" />
@@ -96,6 +96,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_txt_publicaciones"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PUBLICACIONES"
@@ -118,7 +119,7 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre del Perfil"
+                        android:text="@string/empty_string"
                         android:textColor="@color/violetaClaro"
                         android:textAllCaps="true"
                         android:textStyle="bold"
@@ -128,7 +129,7 @@
                         android:id="@+id/tv_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="correo@algo.com"
+                        android:text="@string/empty_string"
                         android:textColor="@color/rosaClaro"
                         android:textStyle="bold"
                         android:textSize="15sp" />
@@ -157,8 +158,6 @@
                         android:textColor="@color/white"
                         android:layout_marginStart="10dp"/>
 
-
-
                 </LinearLayout>
 
             </FrameLayout>
@@ -184,7 +183,7 @@
                 android:id="@+id/tv_no_hay_publicaciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No hay publicaciones"
+                android:text="@string/empty_string"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginStart="20dp"

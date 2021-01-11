@@ -68,7 +68,7 @@
                         android:id="@+id/tv_phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="351266546"
+                        android:text="@string/empty_string"
                         android:textColor="@color/white"
                         android:textStyle="bold"
                         android:textSize="15sp" />
@@ -96,6 +96,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_txt_publicaciones"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="PUBLICACIONES"
@@ -118,7 +119,7 @@
                         android:id="@+id/tv_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre del Perfil"
+                        android:text="@string/empty_string"
                         android:textColor="@color/violetaClaro"
                         android:textAllCaps="true"
                         android:textStyle="bold"
@@ -128,7 +129,7 @@
                         android:id="@+id/tv_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="correo@algo.com"
+                        android:text="@string/empty_string"
                         android:textColor="@color/rosaClaro"
                         android:textStyle="bold"
                         android:textSize="15sp" />
@@ -148,18 +149,34 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginTop="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No hay publicaciones"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            android:textSize="18sp"
-            android:textStyle="italic"
-            android:textColor="@color/rosaClaro"
-            android:layout_gravity="center_horizontal"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_publicaciones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_string"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="18sp"
+                android:textStyle="italic"
+                android:textColor="@color/rosaClaro"
+                android:layout_gravity="center_horizontal"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_MyPosts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 

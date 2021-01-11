@@ -1,6 +1,8 @@
 package com.ferbook.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,11 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ferbook.R;
+import com.ferbook.adapters.MyPostsAdapter;
+import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -24,17 +30,20 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView        tv_Phone;
     TextView        tv_Email;
     TextView        tv_PostNumber;
+    TextView        tv_pub;
+    TextView        tv_txt_pub;
     ImageView       iv_Cover;
     CircleImageView civ_Profile;
+    CircleImageView mImageView_Back_button;
 
     UsersProvider   mUsersProvider;
     Authprovider    mAuthProvider;
     PostProvider    mPostProvider;
 
-    String mExtraIdUser;
+    String          mExtraIdUser;
 
-    CircleImageView     mImageView_Back_button;
-
+    MyPostsAdapter  mPostsAdapter;
+    RecyclerView    mRecyclerView_myPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +54,15 @@ public class UserProfileActivity extends AppCompatActivity {
         tv_Phone        = findViewById(R.id.tv_phone);
         tv_Email        = findViewById(R.id.tv_email);
         tv_PostNumber   = findViewById(R.id.tv_postNumber);
+        tv_pub          = findViewById(R.id.tv_publicaciones);
+        tv_txt_pub      = findViewById(R.id.tv_txt_publicaciones);
         iv_Cover        = findViewById(R.id.iv_cover_image);
         civ_Profile     = findViewById(R.id.circleImage_Profile);
+
+        mRecyclerView_myPosts = findViewById(R.id.recyclerView_MyPosts);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserProfileActivity.this);
+        mRecyclerView_myPosts.setLayoutManager(linearLayoutManager);
 
         mUsersProvider  = new UsersProvider();
         mAuthProvider   = new Authprovider();
@@ -79,11 +95,10 @@ public class UserProfileActivity extends AppCompatActivity {
                         tv_Name.setText(name);
                     }
 
-                    /*
                     if (documentSnapshot.contains("telefono")){
                         String phone = documentSnapshot.getString("telefono");
                         tv_Phone.setText(phone);
-                    }*/
+                    }
 
                     if (documentSnapshot.contains("email")){
 
@@ -127,9 +142,39 @@ public class UserProfileActivity extends AppCompatActivity {
                 int post_number = queryDocumentSnapshots.size();
                 tv_PostNumber.setText(String.valueOf(post_number));
 
-                // Probar si funciona sin parsear el int a String
-                //tv_PostNumber.setText(post_number);
+                if (post_number==0){
+                    tv_pub.setText("No hay publicaciones");
+
+                } else if (post_number==1){
+                    tv_pub.setText("Publicaciones:");
+                    tv_txt_pub.setText("publicación");
+                } else if (post_number>1){
+                    tv_pub.setText("Publicaciones:");
+                    tv_txt_pub.setText("publicaciónes");
+                }
+
             }
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Query query = mPostProvider.getPostsByUser(mExtraIdUser);
+        FirestoreRecyclerOptions<Post> options =
+                new FirestoreRecyclerOptions.Builder<Post>()
+                        .setQuery(query, Post.class)
+                        .build();
+        mPostsAdapter = new MyPostsAdapter(options, UserProfileActivity.this);
+
+        mRecyclerView_myPosts.setAdapter(mPostsAdapter);
+        mPostsAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mPostsAdapter.stopListening();
     }
 }
