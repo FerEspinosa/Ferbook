@@ -16,10 +16,9 @@
     <color name="violetaOscuro">#220044</color>
     <color name="rosa">#BB005E</color>
     <color name="rosaClaro">#D4C0CE</color>
-    <color name="casiNegro">#0E0F12</color>
+    <color name="casiNegro">#080C1B</color>
     <color name="grisOscuro">#18191B</color>
-
-
-
+    <color name="verde">#156518</color>
+    <color name="naranja">#C65701</color>
 
 </resources>
