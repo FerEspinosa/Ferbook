@@ -1,6 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Ferbook" parent="Theme.AppCompat.Light.NoActionBar">
+
+    <style
+        name="Theme.Ferbook"
+        parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/lightgray</item>
         <item name="colorPrimaryVariant">@color/casiNegro</item>
@@ -15,7 +18,9 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="editTextWhite" parent="TextAppearance.AppCompat">
+    <style
+        name="editTextWhite"
+        parent="TextAppearance.AppCompat">
         <item name= "android:textColorHint">@color/white</item>
         <item name= "android:textColorPrimary">@color/white</item>
         <item name= "android:textColorHighlight">@color/white</item>
@@ -25,10 +30,20 @@
         <item name= "android:colorControlActivated">@color/white</item>
     </style>
 
-    <style name="toolbarName" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style
+        name="toolbarName"
+        parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="colorControlNormal">@color/white</item>
         <item name="titleTextColor">@color/violetaClaro</item>
     </style>
+
+    <style
+        name="ToolbarThemeWhite"
+        parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+    </style>
+
 
 
 </resources>

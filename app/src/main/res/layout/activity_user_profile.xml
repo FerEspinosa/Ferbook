@@ -5,22 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.UserProfileActivity"
-    android:background="@color/casiNegro">
+    android:background="@color/casiNegro"
+    tools:context=".activities.UserProfileActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        android:background="@color/casiNegro">
+        android:background="@color/casiNegro"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/black">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                android:transitionName="@string/transitionname_picture">
 
                 <View
                     android:layout_width="match_parent"
@@ -33,9 +37,7 @@
                     android:layout_height="200dp"
                     android:src="@drawable/cover_image"
                     android:alpha="0.8"
-                    android:scaleType="centerCrop"
-                    app:layout_collapseMode="pin"
-                    android:transitionName="@string/transitionname_picture"/>
+                    android:scaleType="centerCrop" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/circleImage_Profile"
@@ -43,7 +45,7 @@
                     android:layout_height="140dp"
                     android:src="@drawable/ic_profile"
                     app:civ_circle_background_color="@color/gray"
-                    android:layout_marginTop="140dp"
+                    android:layout_marginTop="130dp"
                     app:civ_border_color="@color/white"
                     app:civ_border_width="5dp"/>
 
@@ -75,8 +77,6 @@
 
                 </LinearLayout>
 
-
-
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -106,14 +106,12 @@
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="bottom"
-                    android:gravity="center"
-                    android:layout_marginBottom="10dp">
+                    android:gravity="center">
 
                     <TextView
                         android:id="@+id/tv_name"
@@ -138,6 +136,14 @@
 
             </FrameLayout>
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                android:theme="@style/ToolbarThemeWhite"
+                />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
 
@@ -147,7 +153,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="5dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -180,13 +186,5 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-
-        android:id="@+id/btn_atras"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_arrow_back_white"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -3,6 +3,7 @@ package com.ferbook.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,8 +73,8 @@ public class PostDetailActivity extends AppCompatActivity {
     TextView            mTv_consola;
     TextView            mTv_description;
     FloatingActionButton mBtn_comment;
+    Toolbar             mToolbar;
 
-    CircleImageView     mImageView_Back_button;
 
     String              mIdUser = "";
 
@@ -111,21 +112,17 @@ public class PostDetailActivity extends AppCompatActivity {
         mTv_relativeTime    = findViewById(R.id.tv_relativeTime);
         mTv_likesNumber     = findViewById(R.id.tv_likesNumber);
 
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         mRecyclerViewComments = findViewById(R.id.recyclerViewComments);
         mRecyclerViewComments.setNestedScrollingEnabled(false);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
         mRecyclerViewComments.setLayoutManager(linearLayoutManager);
 
-
-        // BOTON ATRAS
-        mImageView_Back_button = findViewById(R.id.btn_atras);
-        mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
         // BOTON VER PERFIL
         mBtn_viewProfile = findViewById(R.id.button_ver_perfil);

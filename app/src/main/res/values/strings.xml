@@ -38,7 +38,7 @@
     <string name="nombre_de_usuario">nombre de usuario</string>
     <string name="hace_0_min">hace 0 min</string>
     <string name="_0_likes">0 likes</string>
-    <string name="empty_string" />
+    <string name="empty_string"> texto de prueba</string>
     <string name="comentarios">Comentarios</string>
 
 

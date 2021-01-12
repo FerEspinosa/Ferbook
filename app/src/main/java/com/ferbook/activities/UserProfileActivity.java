@@ -1,10 +1,13 @@
 package com.ferbook.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,7 +37,6 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView        tv_txt_pub;
     ImageView       iv_Cover;
     CircleImageView civ_Profile;
-    CircleImageView mImageView_Back_button;
 
     UsersProvider   mUsersProvider;
     Authprovider    mAuthProvider;
@@ -44,6 +46,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     MyPostsAdapter  mPostsAdapter;
     RecyclerView    mRecyclerView_myPosts;
+
+    Toolbar         mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mRecyclerView_myPosts = findViewById(R.id.recyclerView_MyPosts);
 
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UserProfileActivity.this);
         mRecyclerView_myPosts.setLayoutManager(linearLayoutManager);
 
@@ -71,13 +81,14 @@ public class UserProfileActivity extends AppCompatActivity {
         mExtraIdUser = getIntent().getStringExtra("idUser");
 
         // BOTON ATRAS
+        /*
         mImageView_Back_button = findViewById(R.id.btn_atras);
         mImageView_Back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
-        });
+        });*/
 
         getUser();
         getPostNumber();
@@ -176,5 +187,13 @@ public class UserProfileActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         mPostsAdapter.stopListening();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+        }
+        return true;
     }
 }
