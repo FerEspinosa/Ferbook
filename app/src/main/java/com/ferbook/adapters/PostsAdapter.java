@@ -38,17 +38,33 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
     LikesProviders  mLikesProviders;
     Authprovider    mAutheProvider;
 
+    TextView        mTv_filteredPostNumber;
+
     public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
         this.context    = context;
         mUsersProvider  = new UsersProvider();
         mLikesProviders = new LikesProviders();
         mAutheProvider  = new Authprovider();
-
     }
+
+    public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context, TextView textview){
+        super(options);
+        this.context    = context;
+        mUsersProvider  = new UsersProvider();
+        mLikesProviders = new LikesProviders();
+        mAutheProvider  = new Authprovider();
+        mTv_filteredPostNumber = textview;
+    }
+
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Post post) {
+
+        if (mTv_filteredPostNumber != null){
+            int filterPostNumber = getSnapshots().size();
+            mTv_filteredPostNumber.setText(String.valueOf(filterPostNumber));
+        }
 
         // obtener el documento que contiene el Post para mostrar en el cardView
         DocumentSnapshot document = getSnapshots().getSnapshot(position);

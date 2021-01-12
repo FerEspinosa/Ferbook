@@ -3,11 +3,13 @@ package com.ferbook.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.ferbook.R;
 import com.ferbook.adapters.PostsAdapter;
@@ -26,7 +28,9 @@ public class FiltersActivity extends AppCompatActivity {
     PostProvider mPostProvider;
     PostsAdapter mPostsAdapter;
 
-    Toolbar     mToolbar;
+    Toolbar      mToolbar;
+
+    TextView     tv_filt_number;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +50,13 @@ public class FiltersActivity extends AppCompatActivity {
         mRecyclerView   = findViewById(R.id.recyclerView_FilteredPosts);
 
         // El siguiente LinearLayoutManager va a mostrar los layouts uno abajo del otro
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FiltersActivity.this);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(FiltersActivity.this);
+        // (para hacer funcionar la linea anterior, hay que pasar el linearLayoutManager al mRecyclerView de abajo)
+        // pero ahora voy a reemplazarlo por el layout de cuadrícula
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(FiltersActivity.this, 2));
+
+        tv_filt_number = findViewById(R.id.tv_filteredPostNumber);
 
     }
 
@@ -55,11 +64,12 @@ public class FiltersActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         Query query = mPostProvider.getPostByCategory(mExtraCategory);
+
         FirestoreRecyclerOptions<Post> options =
                 new FirestoreRecyclerOptions.Builder<Post>()
                         .setQuery(query, Post.class)
                         .build();
-        mPostsAdapter = new PostsAdapter(options, FiltersActivity.this);
+        mPostsAdapter = new PostsAdapter(options, FiltersActivity.this, tv_filt_number);
 
         mRecyclerView.setAdapter(mPostsAdapter);
         mPostsAdapter.startListening();

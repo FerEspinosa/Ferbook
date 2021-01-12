@@ -27,9 +27,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total resultados: "/>
+                android:text="Total resultados: "
+                android:textStyle="italic"
+                android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/tv_filteredPostNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -41,7 +44,7 @@
             android:id="@+id/recyclerView_FilteredPosts"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="5dp"/>
 
     </LinearLayout>
 
