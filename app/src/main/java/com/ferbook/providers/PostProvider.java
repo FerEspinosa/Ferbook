@@ -23,6 +23,10 @@ public class PostProvider {
         return mCollection.orderBy("timestamp", Query.Direction.DESCENDING);
     }
 
+    public Query getPostByCategory(String category){
+        return mCollection.whereEqualTo("category", category).orderBy("timestamp");
+    }
+
 
     // En el siguiente método, el parámetro "id" se refiere al "id" del usuario
     // Y recupera TODOS los postS de ese usuario

@@ -164,7 +164,7 @@ public class PostActivity extends AppCompatActivity {
         iv_Nintendo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCategory = "nintendo";
+                mCategory = "NINTENDO";
                 tv_category.setText(mCategory);
             }
         });
@@ -172,7 +172,7 @@ public class PostActivity extends AppCompatActivity {
         iv_PlayStation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCategory = "playstation";
+                mCategory = "PLAYSTATION";
                 tv_category.setText(mCategory);
             }
         });
@@ -180,7 +180,7 @@ public class PostActivity extends AppCompatActivity {
         iv_Xbox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCategory = "xbox";
+                mCategory = "XBOX";
                 tv_category.setText(mCategory);
             }
         });
