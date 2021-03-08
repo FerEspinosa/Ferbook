@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,26 @@
     android:layout_marginBottom="50dp"
     android:background="@color/black">
 
-    <include layout="@layout/action_bar_toolbar"/>
+    <com.mancj.materialsearchbar.MaterialSearchBar
+        android:id="@+id/searchBar"
+        style="@style/MaterialSearchBarLight"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:mt_hint="Buscar publicación"
+        app:mt_maxSuggestionsCount="10"
+        app:mt_placeholder="Buscar"
+        app:mt_searchBarColor="@color/casiNegro"
+        app:mt_placeholderColor="@color/white"
+        app:mt_searchIconTint="@color/white"
+        app:mt_menuIconTint="@color/white"
+        app:mt_clearIconTint="@color/white"
+        app:mt_hintColor="@color/white"
+        app:mt_backIconTint="@color/white"
+        app:mt_leftTextSelectorTint="@color/naranja"
+        app:mt_textColor="@color/white"
+        app:mt_backIconUseTint="true"/>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,10 +50,10 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_signo_mas"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="15dp"
         android:layout_marginEnd="15dp"
-        android:src="@drawable/ic_signo_mas"
         app:backgroundTint="@color/rosa"
         android:contentDescription="@string/app_name" />
 

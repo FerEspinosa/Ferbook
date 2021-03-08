@@ -116,7 +116,7 @@ public class ProfileFragment extends Fragment {
                     tv_txt_pub.setText("publicación");
                 } else if (post_number>1){
                     tv_pub.setText("Publicaciones:");
-                    tv_txt_pub.setText("publicaciónes");
+                    tv_txt_pub.setText("publicaciones");
                 }
             }
         });

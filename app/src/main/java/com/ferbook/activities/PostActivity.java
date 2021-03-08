@@ -269,7 +269,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void clickPost() {
 
-        mTitle = tv_title.getText().toString();
+        mTitle = tv_title.getText().toString().toLowerCase();
         mDescription = mTextInputDescription.getText().toString();
 
         if (!mTitle.isEmpty()&&!mDescription.isEmpty()&&!mCategory.isEmpty()){

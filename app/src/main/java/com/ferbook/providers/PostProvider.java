@@ -3,6 +3,7 @@ package com.ferbook.providers;
 import com.ferbook.models.Post;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -10,9 +11,11 @@ import com.google.firebase.firestore.Query;
 public class PostProvider {
 
     CollectionReference mCollection;
+    CommentProvider mCommentProvider;
 
     public PostProvider () {
         mCollection = FirebaseFirestore.getInstance().collection("Posts");
+        mCommentProvider = new CommentProvider();
     }
 
     public Task<Void> save(Post post){
@@ -25,6 +28,10 @@ public class PostProvider {
 
     public Query getPostByCategory(String category){
         return mCollection.whereEqualTo("category", category).orderBy("timestamp");
+    }
+
+    public Query getPostByTitle(String title){
+        return mCollection.orderBy("titulo").startAt(title).endAt(title+'\uf8ff');
     }
 
 
@@ -45,7 +52,13 @@ public class PostProvider {
     }
 
     public Task <Void> delete (String postId) {
+
+        mCommentProvider.getCommentsByPost(postId);
+
         return mCollection.document(postId).delete();
+
     }
+
+
 
 }
