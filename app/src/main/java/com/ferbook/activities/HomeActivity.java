@@ -14,21 +14,28 @@ import com.ferbook.fragments.ChatFragment;
 import com.ferbook.fragments.FiltersFragment;
 import com.ferbook.fragments.HomeFragment;
 import com.ferbook.fragments.ProfileFragment;
+import com.ferbook.providers.Authprovider;
+import com.ferbook.providers.TokenProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
 
     BottomNavigationView bottomNavigation;
+    TokenProvider mTokenProvider;
+    Authprovider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        openFragment(new HomeFragment());
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        mTokenProvider = new TokenProvider();
+        mAuthProvider = new Authprovider();
 
+        openFragment(new HomeFragment());
+        createToken();
     }
 
     public void openFragment(Fragment fragment) {
@@ -58,6 +65,10 @@ public class HomeActivity extends AppCompatActivity {
                     return false;
                 }
             };
+
+    private void createToken () {
+        mTokenProvider.create(mAuthProvider.getUid());
+    }
 
     /*
     @Override
