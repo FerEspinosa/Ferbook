@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -37,6 +39,7 @@ public class UserProfileActivity extends AppCompatActivity {
     TextView        tv_txt_pub;
     ImageView       iv_Cover;
     CircleImageView civ_Profile;
+    FloatingActionButton mfab_chat;
 
     UsersProvider   mUsersProvider;
     Authprovider    mAuthProvider;
@@ -62,6 +65,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tv_txt_pub      = findViewById(R.id.tv_txt_publicaciones);
         iv_Cover        = findViewById(R.id.iv_cover_image);
         civ_Profile     = findViewById(R.id.circleImage_Profile);
+        mfab_chat       = findViewById(R.id.fab_chat);
 
         mRecyclerView_myPosts = findViewById(R.id.recyclerView_MyPosts);
 
@@ -80,6 +84,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mExtraIdUser = getIntent().getStringExtra("idUser");
 
+        if (mAuthProvider.getUid()==mExtraIdUser){
+            mfab_chat.setVisibility(View.GONE);
+        }
+
         // BOTON ATRAS
         /*
         mImageView_Back_button = findViewById(R.id.btn_atras);
@@ -92,6 +100,20 @@ public class UserProfileActivity extends AppCompatActivity {
 
         getUser();
         getPostNumber();
+
+        mfab_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity();
+            }
+        });
+    }
+
+    private void goToChatActivity() {
+        Intent intent = new Intent (UserProfileActivity.this, ChatActivity.class);
+        intent.putExtra("userId1", mAuthProvider.getUid());
+        intent.putExtra("userId2", mExtraIdUser);
+        startActivity(intent);
     }
 
     private void getUser () {
