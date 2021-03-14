@@ -41,5 +41,7 @@
     <string name="empty_string"> </string>
     <string name="comentarios">Comentarios</string>
 
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
 
 </resources>
