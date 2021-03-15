@@ -4,6 +4,7 @@ import com.ferbook.models.Chat;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 public class ChatProvider {
 
@@ -16,7 +17,10 @@ public class ChatProvider {
     public void create(Chat chat){
         mcollection.document(chat.getIdUser1()).collection("Users").document(chat.getIdUser2()).set(chat);
         mcollection.document(chat.getIdUser2()).collection("Users").document(chat.getIdUser1()).set(chat);
+    }
 
+    public Query getAll (String userId) {
+        return mcollection.document(userId).collection("Users");
     }
 
 }
