@@ -6,6 +6,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.ArrayList;
+
 public class ChatProvider {
 
     CollectionReference mcollection;
@@ -15,12 +17,20 @@ public class ChatProvider {
     }
 
     public void create(Chat chat){
-        mcollection.document(chat.getIdUser1()).collection("Users").document(chat.getIdUser2()).set(chat);
-        mcollection.document(chat.getIdUser2()).collection("Users").document(chat.getIdUser1()).set(chat);
+       mcollection.document(chat.getIdUser1()+chat.getIdUser2()).set(chat);
+    }
+
+    public Query checkChatExists (String userId1, String userId2) {
+
+        ArrayList<String> ids= new ArrayList<>();
+        ids.add(userId1+userId2);
+        ids.add(userId2+userId1);
+        return mcollection.whereIn("id", ids);
     }
 
     public Query getAll (String userId) {
-        return mcollection.document(userId).collection("Users");
+
+        return mcollection.whereArrayContains("ids", userId);
     }
 
 }

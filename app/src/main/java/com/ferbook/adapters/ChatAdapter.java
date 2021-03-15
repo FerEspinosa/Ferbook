@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ferbook.R;
 import com.ferbook.models.Chat;
+import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -25,11 +26,13 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
     Context context;
     UsersProvider mUsersProvider;
     String mUserId="";
+    Authprovider mAuthProvider;
 
     public ChatAdapter(FirestoreRecyclerOptions <Chat> options, Context context){
         super(options);
         this.context = context;
-        mUsersProvider = new UsersProvider();
+        mUsersProvider  = new UsersProvider();
+        mAuthProvider   = new Authprovider();
     }
 
     @Override
@@ -37,8 +40,18 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
 
         // obtener el documento que contiene el Post mostrado en el cardView
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
-
         String chatId = document.getId();
+
+        //si el usuario 1 del chat es el usuario logueado
+        if (mAuthProvider.getUid().equals(chat.getIdUser1())){
+            //buscar la info del usuario 2
+            getUserInfo(chat.getIdUser2(),holder);
+
+        } else {
+            //buscar la info del usuario 1
+            getUserInfo(chat.getIdUser1(),holder);
+        }
+
         getUserInfo(chatId, holder);
 
     }

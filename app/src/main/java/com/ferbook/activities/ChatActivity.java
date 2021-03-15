@@ -8,11 +8,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ferbook.R;
 import com.ferbook.models.Chat;
 import com.ferbook.providers.ChatProvider;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ChatActivity extends AppCompatActivity {
@@ -35,7 +39,7 @@ public class ChatActivity extends AppCompatActivity {
         mExtraUserId2 = getIntent().getStringExtra("userId2");
 
         mChatProvider = new ChatProvider();
-        createChat();
+        checkIfChatExists();
     }
 
     private void showCustomToolbar(int resource) {
@@ -50,12 +54,35 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setCustomView(mActionBarView);
     }
 
+    private void checkIfChatExists () {
+        mChatProvider.checkChatExists(mExtraUserId1,mExtraUserId2).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int size = queryDocumentSnapshots.size();
+                if (size==0){
+                    Toast.makeText(ChatActivity.this, "Se creará un nuevo chat", Toast.LENGTH_SHORT).show();
+                    createChat();
+                } else {
+                    Toast.makeText(ChatActivity.this, "El chat ya existe", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
     private void createChat () {
         Chat chat = new Chat();
         chat.setIdUser1(mExtraUserId1);
         chat.setIdUser2(mExtraUserId2);
         chat.setWriting(false);
         chat.setTimestamp(new Date().getTime());
+        //los siguientes chat fueron agregados en el video 70. que hace modificaciones a las estructura de datos de los chats
+        chat.setId(mExtraUserId1+mExtraUserId2);
+        ArrayList<String> ids = new ArrayList<>();
+        ids.add(mExtraUserId1);
+        ids.add(mExtraUserId2);
+        chat.setIds(ids);
+        // hasta acá las modificaciones del video 70
+
         mChatProvider.create(chat);
     }
 }
