@@ -1,6 +1,7 @@
 package com.ferbook.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ferbook.R;
+import com.ferbook.activities.ChatActivity;
 import com.ferbook.models.Chat;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.UsersProvider;
@@ -54,6 +56,21 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
 
         getUserInfo(chatId, holder);
 
+        holder.viewHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToChatActivity(chatId, chat.getIdUser1(), chat.getIdUser2());
+            }
+        });
+
+    }
+
+    private void goToChatActivity(String chatId, String userId1, String userId2) {
+        Intent intent = new Intent (context, ChatActivity.class);
+        intent.putExtra("chatId", chatId);
+        intent.putExtra("userId1", userId1);
+        intent.putExtra("userId2", userId2);
+        context.startActivity(intent);
     }
 
     private void getUserInfo (String userId, ViewHolder holder) {

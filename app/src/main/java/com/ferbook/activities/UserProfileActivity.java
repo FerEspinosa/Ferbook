@@ -113,6 +113,7 @@ public class UserProfileActivity extends AppCompatActivity {
         Intent intent = new Intent (UserProfileActivity.this, ChatActivity.class);
         intent.putExtra("userId1", mAuthProvider.getUid());
         intent.putExtra("userId2", mExtraIdUser);
+        intent.putExtra("chatId", mExtraIdUser);
         startActivity(intent);
     }
 
