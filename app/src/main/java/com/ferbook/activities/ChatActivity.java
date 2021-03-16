@@ -18,10 +18,8 @@ import android.widget.Toast;
 
 import com.ferbook.R;
 import com.ferbook.adapters.MessageAdapter;
-import com.ferbook.adapters.MyPostsAdapter;
 import com.ferbook.models.Chat;
 import com.ferbook.models.Message;
-import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
@@ -46,10 +44,10 @@ public class ChatActivity extends AppCompatActivity {
     String mExtraUserId2;
     String mExtraChatId;
 
-    ChatProvider mChatProvider;
+    ChatProvider    mChatProvider;
     MessageProvider mMessageProvider;
-    Authprovider mAuthProvider;
-    UsersProvider mUsersProvider;
+    Authprovider    mAuthProvider;
+    UsersProvider   mUsersProvider;
 
     View            mActionBarView;
     EditText        mEt_message;
@@ -60,7 +58,7 @@ public class ChatActivity extends AppCompatActivity {
     TextView        mTvUsername;
     ImageView       mIv_back;
 
-    RecyclerView    mMessage_RecView;
+    RecyclerView    mRecViewMessage;
     MessageAdapter  mMessageAdapter;
 
     @Override
@@ -73,18 +71,18 @@ public class ChatActivity extends AppCompatActivity {
         mAuthProvider       = new Authprovider();
         mUsersProvider      = new UsersProvider();
 
-        mMessage_RecView = findViewById(R.id.recyclerViewMessage);
+        mRecViewMessage     = findViewById(R.id.recyclerViewMessage);
+        mEt_message         = findViewById(R.id.et_chatMessage);
+        mCiv_send           = findViewById(R.id.civ_send);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
-        mMessage_RecView.setLayoutManager(linearLayoutManager);
+        mRecViewMessage.setLayoutManager(linearLayoutManager);
 
         mExtraUserId1   = getIntent().getStringExtra("userId1");
         mExtraUserId2   = getIntent().getStringExtra("userId2");
         mExtraChatId    = getIntent().getStringExtra("chatId");
 
         showCustomToolbar(R.layout.custom_chat_toolbar);
-
-        mEt_message = findViewById(R.id.et_chatMessage);
-        mCiv_send = findViewById(R.id.civ_send);
 
         mCiv_send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,6 +92,26 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         checkIfChatExists();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Query query = mMessageProvider.getMessagesByChat(mExtraChatId);
+        FirestoreRecyclerOptions<Message> options =
+                new FirestoreRecyclerOptions.Builder<Message>()
+                        .setQuery(query, Message.class)
+                        .build();
+        mMessageAdapter = new MessageAdapter(options, ChatActivity.this);
+        mRecViewMessage.setAdapter(mMessageAdapter);
+        mMessageAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMessageAdapter.stopListening();
     }
 
     private void sendMessage() {
@@ -118,6 +136,7 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         mEt_message.setText("");
+                        mMessageAdapter.notifyDataSetChanged();
                         Toast.makeText(ChatActivity.this, "Se creó el mensaje", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ChatActivity.this, "No se pudo crear el mensaje", Toast.LENGTH_SHORT).show();
@@ -211,26 +230,5 @@ public class ChatActivity extends AppCompatActivity {
         // hasta acá las modificaciones del video 70
 
         mChatProvider.create(chat);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Query query = mMessageProvider.getMessagesByChat(mExtraChatId);
-        FirestoreRecyclerOptions<Message> options =
-                new FirestoreRecyclerOptions.Builder<Message>()
-                        .setQuery(query, Message.class)
-                        .build();
-        mMessageAdapter = new MessageAdapter(options, ChatActivity.this);
-
-        mMessage_RecView.setAdapter(mMessageAdapter);
-        mMessageAdapter.startListening();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mMessageAdapter.stopListening();
     }
 }

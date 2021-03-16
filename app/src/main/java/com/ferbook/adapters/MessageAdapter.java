@@ -52,8 +52,6 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
 
     }
 
-
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -68,7 +66,6 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
         ImageView       iv_doblecheck;
 
         View viewHolder;
-
 
         public ViewHolder (View view){
             super(view);
