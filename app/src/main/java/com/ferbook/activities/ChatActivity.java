@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ferbook.R;
@@ -18,10 +20,13 @@ import com.ferbook.models.Message;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
+import com.ferbook.providers.UsersProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,29 +42,38 @@ public class ChatActivity extends AppCompatActivity {
     ChatProvider mChatProvider;
     MessageProvider mMessageProvider;
     Authprovider mAuthProvider;
+    UsersProvider mUsersProvider;
 
-    View mActionBarView;
-    EditText et_message;
-    CircleImageView civ_send;
+
+    View            mActionBarView;
+    EditText        mEt_message;
+    CircleImageView mCiv_send;
+
+    CircleImageView mCiv_profile;
+    TextView        mTvRelativeTime;
+    TextView        mTvUsername;
+    ImageView       mIv_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        showCustomToolbar(R.layout.custom_chat_toolbar);
-
-        mExtraUserId1 = getIntent().getStringExtra("userId1");
-        mExtraUserId2 = getIntent().getStringExtra("userId2");
-        mExtraChatId = getIntent().getStringExtra("chatId");
 
         mChatProvider       = new ChatProvider();
         mMessageProvider    = new MessageProvider();
         mAuthProvider       = new Authprovider();
+        mUsersProvider      = new UsersProvider();
 
-        et_message  = findViewById(R.id.et_chatMessage);
-        civ_send    = findViewById(R.id.civ_send);
+        mExtraUserId1   = getIntent().getStringExtra("userId1");
+        mExtraUserId2   = getIntent().getStringExtra("userId2");
+        mExtraChatId    = getIntent().getStringExtra("chatId");
 
-        civ_send.setOnClickListener(new View.OnClickListener() {
+        showCustomToolbar(R.layout.custom_chat_toolbar);
+
+        mEt_message = findViewById(R.id.et_chatMessage);
+        mCiv_send = findViewById(R.id.civ_send);
+
+        mCiv_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendMessage();
@@ -70,7 +84,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String textMessage = et_message.getText().toString();
+        String textMessage = mEt_message.getText().toString();
         if (!textMessage.isEmpty()){
             Message message = new Message();
             message.setChatId(mExtraChatId);
@@ -90,7 +104,7 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
-                        et_message.setText("");
+                        mEt_message.setText("");
                         Toast.makeText(ChatActivity.this, "Se creó el mensaje", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(ChatActivity.this, "No se pudo crear el mensaje", Toast.LENGTH_SHORT).show();
@@ -110,6 +124,49 @@ public class ChatActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mActionBarView = inflater.inflate(resource, null);
         actionBar.setCustomView(mActionBarView);
+
+        mCiv_profile = mActionBarView.findViewById(R.id.circleImage_Profile_chatToolbar);
+        mTvUsername = mActionBarView.findViewById(R.id.tv_usernameChatToolbar);
+        mTvRelativeTime = mActionBarView.findViewById(R.id.tv_relativeTime_ChatToolbar);
+        mIv_back = mActionBarView.findViewById(R.id.iv_back_chatToolbar);
+
+        mIv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        getUserInfo();
+
+    }
+
+    private void getUserInfo() {
+        String userIdInfo = "";
+        if (mAuthProvider.getUid().equals(mExtraUserId1)){
+            userIdInfo = mExtraUserId2;
+        } else {
+            userIdInfo = mExtraUserId1;
+        }
+        mUsersProvider.getUser(userIdInfo).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    if (documentSnapshot.contains("nombre")){
+                        String username = documentSnapshot.getString("nombre");
+                        mTvUsername.setText(username);
+                    }
+                    if (documentSnapshot.contains("profile_image")){
+                        String profileImage = documentSnapshot.getString("profile_image");
+                        if (profileImage!=null){
+                            if (!profileImage.equals("")){
+                                Picasso.with(ChatActivity.this).load(profileImage).into(mCiv_profile);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void checkIfChatExists () {
@@ -118,10 +175,9 @@ public class ChatActivity extends AppCompatActivity {
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 int size = queryDocumentSnapshots.size();
                 if (size==0){
-                    Toast.makeText(ChatActivity.this, "Se creará un nuevo chat", Toast.LENGTH_SHORT).show();
                     createChat();
                 } else {
-                    Toast.makeText(ChatActivity.this, "El chat ya existe", Toast.LENGTH_SHORT).show();
+                    mExtraChatId = queryDocumentSnapshots.getDocuments().get(0).getId();
                 }
             }
         });

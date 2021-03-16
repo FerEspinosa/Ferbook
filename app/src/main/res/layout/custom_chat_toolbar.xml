@@ -12,7 +12,7 @@
         android:background="@color/casiNegro">
 
         <ImageView
-            android:id="@+id/iv_back"
+            android:id="@+id/iv_back_chatToolbar"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/ic_arrow_back_white"
@@ -20,7 +20,7 @@
             android:layout_marginEnd="18dp"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/circleImage_Profile"
+            android:id="@+id/circleImage_Profile_chatToolbar"
             android:layout_width="45dp"
             android:layout_height="45dp"
             app:civ_circle_background_color="@color/white"
@@ -36,7 +36,7 @@
             android:layout_gravity="center">
 
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/tv_usernameChatToolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Nombre de usuario"
@@ -46,6 +46,7 @@
                 android:layout_marginTop="5dp"/>
 
             <TextView
+                android:id="@+id/tv_relativeTime_ChatToolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
