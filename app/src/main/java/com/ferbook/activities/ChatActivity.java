@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,16 +17,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ferbook.R;
+import com.ferbook.adapters.MessageAdapter;
+import com.ferbook.adapters.MyPostsAdapter;
 import com.ferbook.models.Chat;
 import com.ferbook.models.Message;
+import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
 import com.ferbook.providers.UsersProvider;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -44,7 +51,6 @@ public class ChatActivity extends AppCompatActivity {
     Authprovider mAuthProvider;
     UsersProvider mUsersProvider;
 
-
     View            mActionBarView;
     EditText        mEt_message;
     CircleImageView mCiv_send;
@@ -53,6 +59,9 @@ public class ChatActivity extends AppCompatActivity {
     TextView        mTvRelativeTime;
     TextView        mTvUsername;
     ImageView       mIv_back;
+
+    RecyclerView    mMessage_RecView;
+    MessageAdapter  mMessageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +72,10 @@ public class ChatActivity extends AppCompatActivity {
         mMessageProvider    = new MessageProvider();
         mAuthProvider       = new Authprovider();
         mUsersProvider      = new UsersProvider();
+
+        mMessage_RecView = findViewById(R.id.recyclerViewMessage);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
+        mMessage_RecView.setLayoutManager(linearLayoutManager);
 
         mExtraUserId1   = getIntent().getStringExtra("userId1");
         mExtraUserId2   = getIntent().getStringExtra("userId2");
@@ -198,5 +211,26 @@ public class ChatActivity extends AppCompatActivity {
         // hasta acá las modificaciones del video 70
 
         mChatProvider.create(chat);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        Query query = mMessageProvider.getMessagesByChat(mExtraChatId);
+        FirestoreRecyclerOptions<Message> options =
+                new FirestoreRecyclerOptions.Builder<Message>()
+                        .setQuery(query, Message.class)
+                        .build();
+        mMessageAdapter = new MessageAdapter(options, ChatActivity.this);
+
+        mMessage_RecView.setAdapter(mMessageAdapter);
+        mMessageAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMessageAdapter.stopListening();
     }
 }
