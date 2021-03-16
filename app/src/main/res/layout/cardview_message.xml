@@ -1,37 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/rounded_linear_layout"
-    android:paddingTop="7dp"
+    android:paddingTop="10dp"
     android:paddingBottom="10dp"
-    android:paddingStart="20dp"
-    android:paddingEnd="15dp"
-    android:layout_margin="10dp">
+    android:paddingStart="30dp"
+    android:paddingEnd="30dp">
 
-    <TextView
-        android:id="@+id/message_bubble_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Nuevo mensaje"
-        android:textSize="15sp"/>
-
-    <TextView
-        android:id="@+id/message_bubble_date"
+    <LinearLayout
+        android:id="@+id/bubble_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fecha"
-        android:textSize="12sp"
-        android:layout_marginStart="10dp"
-        android:layout_gravity="bottom"/>
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_linear_layout"
+        android:paddingTop="7dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="15dp"
+        android:layout_margin="10dp">
 
-    <ImageView
-        android:id="@+id/iv_doblecheck"
-        android:layout_width="35dp"
-        android:layout_height="20dp"
-        android:src="@drawable/doble_check_gray"
-        android:layout_gravity="bottom"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/message_bubble_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nuevo mensaje"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/message_bubble_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fecha"
+            android:textSize="12sp"
+            android:layout_marginStart="10dp"
+            android:layout_gravity="bottom"/>
+
+        <ImageView
+            android:id="@+id/iv_doblecheck"
+            android:layout_width="35dp"
+            android:layout_height="20dp"
+            android:src="@drawable/doble_check_gray"
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
+
+</RelativeLayout>
+
