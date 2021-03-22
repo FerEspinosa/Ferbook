@@ -72,9 +72,9 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(0,0,150,0);
             holder.linearLayout_messageBubble.setLayoutParams(params);
-            holder.linearLayout_messageBubble.setPadding(30,20,-40,20);
+            holder.linearLayout_messageBubble.setPadding(30,20,30,20);
             holder.linearLayout_messageBubble.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout_green));
-            holder.iv_doblecheck.setVisibility(View.INVISIBLE);
+            holder.iv_doblecheck.setVisibility(View.GONE);
         }
 
     }
