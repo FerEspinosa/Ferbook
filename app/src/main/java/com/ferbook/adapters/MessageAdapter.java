@@ -32,7 +32,6 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
 
     Context context;
     UsersProvider mUsersProvider;
-    String mUserId="";
     Authprovider mAuthProvider;
 
     public MessageAdapter(FirestoreRecyclerOptions <Message> options, Context context){
@@ -49,7 +48,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
         DocumentSnapshot document = getSnapshots().getSnapshot(position);
         String messageId = document.getId();
         holder.tv_mBubble_text.setText(message.getMessage());
-        String relativeTime = RelativeTime.getTimeAgo(message.getTimestamp(),context);
+        String relativeTime = RelativeTime.timeFormatAMPM(message.getTimestamp(),context);
         holder.tv_mBubble_date.setText(relativeTime);
 
         if(message.getSenderId().equals(mAuthProvider.getUid())){
