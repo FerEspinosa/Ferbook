@@ -9,12 +9,14 @@ public class User {
     private Long timestamp;
     private String profile_image;
     private String cover_image;
+    private Long lastConnection;
+    private boolean online;
 
     public User () {
 
     }
 
-    public User(String id, String email, String nombre, String telefono, Long timestamp, String profile_image, String cover_image) {
+    public User(String id, String email, String nombre, String telefono, Long timestamp, String profile_image, String cover_image, Long lastConnection, boolean online) {
         this.id = id;
         this.email = email;
         this.nombre = nombre;
@@ -22,6 +24,24 @@ public class User {
         this.timestamp = timestamp;
         this.profile_image = profile_image;
         this.cover_image = cover_image;
+        this.lastConnection = lastConnection;
+        this.online = online;
+    }
+
+    public Long getLastConnection() {
+        return lastConnection;
+    }
+
+    public void setLastConnection(Long lastConnection) {
+        this.lastConnection = lastConnection;
+    }
+
+    public boolean isOnline() {
+        return online;
+    }
+
+    public void setOnline(boolean online) {
+        this.online = online;
     }
 
     public String getTelefono() {

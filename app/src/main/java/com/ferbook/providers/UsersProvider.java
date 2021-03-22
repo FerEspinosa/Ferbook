@@ -3,6 +3,7 @@ package com.ferbook.providers;
 import com.ferbook.models.User;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -21,6 +22,9 @@ public class UsersProvider {
     public Task<DocumentSnapshot> getUser (String id) {
         return mcollection.document(id).get();
     }
+    public DocumentReference getUserRealTime (String id) {
+        return mcollection.document(id);
+    }
 
     public Task<Void> create (User user) {
         return mcollection.document(user.getId()).set(user);
@@ -34,6 +38,14 @@ public class UsersProvider {
         map.put("profile_image",user.getProfile_image());
         map.put("cover_image",user.getCover_image());
         return mcollection.document(user.getId()).update(map);
+    }
+
+    public Task<Void> updateOnline (String userId, boolean status) {
+        Map <String, Object> map = new HashMap<>();
+        map.put("online",status);
+        map.put("lastConnect", new Date().getTime());
+
+        return mcollection.document(userId).update(map);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.ferbook.activities;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -24,11 +25,14 @@ import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
 import com.ferbook.providers.UsersProvider;
+import com.ferbook.utils.RelativeTime;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -203,13 +207,26 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             userIdInfo = mExtraUserId1;
         }
-        mUsersProvider.getUser(userIdInfo).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        mUsersProvider.getUserRealTime(userIdInfo).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot.exists()){
                     if (documentSnapshot.contains("nombre")){
                         String username = documentSnapshot.getString("nombre");
                         mTvUsername.setText(username);
+                    }
+                    if (documentSnapshot.contains("online")){
+                        boolean online = documentSnapshot.getBoolean("online");
+                        if (online){
+                            mTvRelativeTime.setText("En línea");
+
+                        } else if (documentSnapshot.contains("lastConnection")){
+
+                            long lastConnect = documentSnapshot.getLong("lastConnect");
+                            String relativeTime = RelativeTime.getTimeAgo(lastConnect, ChatActivity.this);
+                            mTvRelativeTime.setText(relativeTime);
+                        }
+
                     }
                     if (documentSnapshot.contains("profile_image")){
                         String profileImage = documentSnapshot.getString("profile_image");

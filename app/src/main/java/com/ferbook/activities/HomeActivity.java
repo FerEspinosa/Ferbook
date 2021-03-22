@@ -16,6 +16,7 @@ import com.ferbook.fragments.HomeFragment;
 import com.ferbook.fragments.ProfileFragment;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.TokenProvider;
+import com.ferbook.providers.UsersProvider;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -23,6 +24,7 @@ public class HomeActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigation;
     TokenProvider mTokenProvider;
     Authprovider mAuthProvider;
+    UsersProvider mUsersProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +33,30 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        mTokenProvider = new TokenProvider();
-        mAuthProvider = new Authprovider();
+        mTokenProvider  = new TokenProvider();
+        mAuthProvider   = new Authprovider();
+        mUsersProvider  = new UsersProvider();
 
         openFragment(new HomeFragment());
         createToken();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        updateOnline(true);
+
+    }
+
+    private void updateOnline(boolean connected) {
+        mUsersProvider.updateOnline(mAuthProvider.getUid() ,connected);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        updateOnline(false);
     }
 
     public void openFragment(Fragment fragment) {

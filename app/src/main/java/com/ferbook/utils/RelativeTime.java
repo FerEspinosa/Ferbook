@@ -22,7 +22,7 @@ public class RelativeTime extends Application {
 
         long now = System.currentTimeMillis();
         if (time > now || time <= 0) {
-            return null;
+            return "Hace un momento";
         }
 
         // TODO: localize
