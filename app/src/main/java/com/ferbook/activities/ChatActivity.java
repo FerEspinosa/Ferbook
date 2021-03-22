@@ -123,10 +123,12 @@ public class ChatActivity extends AppCompatActivity {
         mRecViewMessage.setAdapter(mMessageAdapter);
         mMessageAdapter.startListening();
 
+        //el siguiente método detecta cambios en el adapter
         mMessageAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
+                updateViewed();
                 int messageNumber = mMessageAdapter.getItemCount();
                 int lastMessagePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
                 if (lastMessagePosition == -1 || (positionStart >= (messageNumber-1)&& lastMessagePosition == (positionStart-1))){
@@ -232,6 +234,24 @@ public class ChatActivity extends AppCompatActivity {
                 } else {
                     mExtraChatId = queryDocumentSnapshots.getDocuments().get(0).getId();
                     getChatMessage();
+                    updateViewed();
+                }
+            }
+        });
+    }
+
+    private void updateViewed() {
+        String senderId = "";
+        if (mAuthProvider.getUid().equals(mExtraUserId1)){
+            senderId = mExtraUserId2;
+        } else {
+            senderId = mExtraUserId1;
+        }
+        mMessageProvider.getMessagesByChatAndSender(mExtraChatId, senderId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot document: queryDocumentSnapshots.getDocuments()){
+                    mMessageProvider.updateViewed(document.getId(), true);
                 }
             }
         });

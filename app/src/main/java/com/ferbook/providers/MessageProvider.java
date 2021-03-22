@@ -7,6 +7,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MessageProvider {
 
     CollectionReference mCollection;
@@ -23,5 +26,15 @@ public class MessageProvider {
 
     public Query getMessagesByChat (String chatId){
         return mCollection.whereEqualTo("chatId", chatId).orderBy("timestamp", Query.Direction.ASCENDING);
+    }
+
+    public Query getMessagesByChatAndSender (String chatId, String senderId){
+        return mCollection.whereEqualTo("chatId", chatId).whereEqualTo("senderId", senderId).whereEqualTo("viewed",false);
+    }
+
+    public Task <Void> updateViewed (String documentId, boolean state) {
+        Map <String, Object> map = new HashMap<>();
+        map.put("viewed", state);
+        return mCollection.document(documentId).update(map);
     }
 }

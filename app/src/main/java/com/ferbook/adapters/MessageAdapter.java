@@ -76,6 +76,12 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
             holder.iv_doblecheck.setVisibility(View.GONE);
         }
 
+        if (message.isViewed()){
+            holder.iv_doblecheck.setImageResource(R.drawable.doble_check);
+        } else {
+            holder.iv_doblecheck.setImageResource(R.drawable.doble_check_gray);
+        }
+
     }
 
     @NonNull
