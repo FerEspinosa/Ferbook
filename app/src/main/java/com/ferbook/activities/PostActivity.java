@@ -27,6 +27,7 @@ import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ImageProvider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.utils.FileUtil;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -470,4 +471,15 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, PostActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostActivity.this);
+    }
 }

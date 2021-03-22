@@ -17,6 +17,7 @@ import com.ferbook.fragments.ProfileFragment;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.TokenProvider;
 import com.ferbook.providers.UsersProvider;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity {
@@ -44,20 +45,33 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
-        updateOnline(true);
+        ViewedMessageHelper.updateOnline(true, HomeActivity.this);
+        //updateOnline(true);
 
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, HomeActivity.this);
+    }
+
+    /*
+    métodos borrados en el video 78:
 
     private void updateOnline(boolean connected) {
         mUsersProvider.updateOnline(mAuthProvider.getUid() ,connected);
     }
 
-    @Override
+        @Override
     protected void onStop() {
         super.onStop();
         updateOnline(false);
     }
+
+    */
+
+
 
     public void openFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

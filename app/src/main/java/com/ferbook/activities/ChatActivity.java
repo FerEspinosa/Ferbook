@@ -26,6 +26,7 @@ import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
 import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.RelativeTime;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -108,6 +109,14 @@ public class ChatActivity extends AppCompatActivity {
         if (mMessageAdapter!=null){
             mMessageAdapter.startListening();
         }
+        ViewedMessageHelper.updateOnline(true, ChatActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, ChatActivity.this);
 
     }
 
@@ -115,6 +124,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         mMessageAdapter.stopListening();
+
     }
 
     private void getChatMessage () {
@@ -183,7 +193,6 @@ public class ChatActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mActionBarView = inflater.inflate(resource, null);
         actionBar.setCustomView(mActionBarView);
-
         mCiv_profile = mActionBarView.findViewById(R.id.circleImage_Profile_chatToolbar);
         mTvUsername = mActionBarView.findViewById(R.id.tv_usernameChatToolbar);
         mTvRelativeTime = mActionBarView.findViewById(R.id.tv_relativeTime_ChatToolbar);

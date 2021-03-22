@@ -36,6 +36,7 @@ import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.TokenProvider;
 import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.RelativeTime;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -170,6 +171,15 @@ public class PostDetailActivity extends AppCompatActivity {
 
         mRecyclerViewComments.setAdapter(mCommentAdapter);
         mCommentAdapter.startListening();
+
+        ViewedMessageHelper.updateOnline(true, PostDetailActivity.this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostDetailActivity.this);
     }
 
     @Override

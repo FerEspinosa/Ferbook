@@ -16,6 +16,7 @@ import com.ferbook.adapters.PostsAdapter;
 import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.PostProvider;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
 
@@ -74,6 +75,13 @@ public class FiltersActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mPostsAdapter);
         mPostsAdapter.startListening();
 
+        ViewedMessageHelper.updateOnline(true, FiltersActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, FiltersActivity.this);
     }
 
     @Override

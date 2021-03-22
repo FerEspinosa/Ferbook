@@ -25,6 +25,7 @@ import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ImageProvider;
 import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.FileUtil;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -556,6 +557,19 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, EditProfileActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, EditProfileActivity.this);
 
     }
 }

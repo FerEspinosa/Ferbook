@@ -3,6 +3,7 @@
     package="com.ferbook">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <uses-feature
         android:name="android.hardware.camera2"
@@ -15,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Ferbook">
-        <activity android:name=".activities.ChatActivity"></activity>
+
+        <activity android:name=".activities.ChatActivity"/>
         <activity
             android:name=".activities.FiltersActivity"
             android:parentActivityName=".activities.HomeActivity" />
@@ -40,7 +42,7 @@
         <activity android:name=".activities.PostActivity" />
         <activity android:name=".activities.CompleteProfileActivity" />
         <activity android:name=".activities.HomeActivity" />
-        <activity android:name=".activities.registerActivity" />
+        <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

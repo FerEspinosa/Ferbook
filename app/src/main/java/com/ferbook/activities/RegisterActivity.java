@@ -14,23 +14,20 @@ import com.ferbook.R;
 import com.ferbook.models.User;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.UsersProvider;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
-public class registerActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     CircleImageView     btn_atras;
     Button              btn_registrarse;
@@ -107,16 +104,16 @@ public class registerActivity extends AppCompatActivity {
                                 crear_usuario(email, contrasena, nombre, telefono);
 
                             } else {
-                                Toast.makeText(registerActivity.this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(registerActivity.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegisterActivity.this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(registerActivity.this, "Ingresa un email válido", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Ingresa un email válido", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(registerActivity.this, "Completá todos los campos", Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, "Completá todos los campos", Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -146,18 +143,18 @@ public class registerActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
-                                Toast.makeText(registerActivity.this, "Se registró el usuario y se guardó el nombre en la base de datos", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "Se registró el usuario y se guardó el nombre en la base de datos", Toast.LENGTH_LONG).show();
                                 mDialog.dismiss();
                                 goHome();
                             } else {
-                                Toast.makeText(registerActivity.this, "No se pudo guardar el nombre de usuario", Toast.LENGTH_LONG).show();
+                                Toast.makeText(RegisterActivity.this, "No se pudo guardar el nombre de usuario", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
 
                 } else {
                     mDialog.dismiss();
-                    Toast.makeText(registerActivity.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "No se pudo registrar el usuario", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -172,7 +169,7 @@ public class registerActivity extends AppCompatActivity {
     }
 
     private void goHome () {
-        Intent intent = new Intent(registerActivity.this, HomeActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
         startActivity(intent);
 
     }

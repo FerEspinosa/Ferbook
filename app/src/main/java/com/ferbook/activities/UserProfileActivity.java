@@ -19,6 +19,7 @@ import com.ferbook.models.Post;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.PostProvider;
 import com.ferbook.providers.UsersProvider;
+import com.ferbook.utils.ViewedMessageHelper;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -204,6 +205,14 @@ public class UserProfileActivity extends AppCompatActivity {
 
         mRecyclerView_myPosts.setAdapter(mPostsAdapter);
         mPostsAdapter.startListening();
+
+        ViewedMessageHelper.updateOnline(true, UserProfileActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(true, UserProfileActivity.this);
     }
 
     @Override
