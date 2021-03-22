@@ -252,5 +252,7 @@ public class ChatActivity extends AppCompatActivity {
         // hasta acá las modificaciones del video 70
 
         mChatProvider.create(chat);
+        mExtraChatId = chat.getId();
+        getChatMessage();
     }
 }

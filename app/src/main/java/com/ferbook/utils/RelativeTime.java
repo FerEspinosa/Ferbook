@@ -64,7 +64,7 @@ public class RelativeTime extends Application {
         final long diff = now - time;
          if (diff < 24 * HOUR_MILLIS) {
              String dateString = formatter.format(new Date(time));
-            return "Hace " + dateString;
+            return dateString;
         } else if (diff < 48 * HOUR_MILLIS) {
             return "Ayer";
         } else {
