@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -67,6 +68,8 @@ public class ChatActivity extends AppCompatActivity {
     MessageAdapter  mMessageAdapter;
 
     LinearLayoutManager mLinearLayoutManager;
+
+    ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,14 +120,20 @@ public class ChatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         ViewedMessageHelper.updateOnline(false, ChatActivity.this);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mMessageAdapter.stopListening();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener!=null){
+            mListener.remove();
+        }
     }
 
     private void getChatMessage () {
@@ -216,7 +225,8 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             userIdInfo = mExtraUserId1;
         }
-        mUsersProvider.getUserRealTime(userIdInfo).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+
+        mListener = mUsersProvider.getUserRealTime(userIdInfo).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException error) {
                 if (documentSnapshot.exists()){
@@ -235,7 +245,6 @@ public class ChatActivity extends AppCompatActivity {
                             String relativeTime = RelativeTime.getTimeAgo(lastConnect, ChatActivity.this);
                             mTvRelativeTime.setText(relativeTime);
                         }
-
                     }
                     if (documentSnapshot.contains("profile_image")){
                         String profileImage = documentSnapshot.getString("profile_image");

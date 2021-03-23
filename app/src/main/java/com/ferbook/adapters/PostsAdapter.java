@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +41,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
     Authprovider    mAutheProvider;
 
     TextView        mTv_filteredPostNumber;
+    ListenerRegistration mListener;
 
     public PostsAdapter (FirestoreRecyclerOptions <Post> options, Context context){
         super(options);
@@ -155,14 +158,18 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
     }
 
     private void getLikeNumber (String postId, ViewHolder holder) {
-        mLikesProviders.getLikesByPost(postId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+
+     mListener = mLikesProviders.getLikesByPost(postId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                int likeNumber = value.size();
-                if (likeNumber==1){
-                    holder.tv_likeNumber.setText(String.valueOf("1 like"));
-                } else {
-                    holder.tv_likeNumber.setText(String.valueOf(likeNumber+" likes"));
+
+                if (value != null){
+                    int likeNumber = value.size();
+                    if (likeNumber==1){
+                        holder.tv_likeNumber.setText(String.valueOf("1 like"));
+                    } else {
+                        holder.tv_likeNumber.setText(String.valueOf(likeNumber+" likes"));
+                    }
                 }
             }
         });
@@ -180,6 +187,13 @@ public class PostsAdapter extends FirestoreRecyclerAdapter <Post,PostsAdapter.Vi
                 }
             }
         });
+    }
+
+
+    public ListenerRegistration getListener() {
+        return mListener;
+        //como no puedo desactivar el listener en esta clase (porque no es una activity, y no pasa por el
+        // ciclo de vida "onDestroy"), paso el listener a la activity, y una vez allí desactivo el listener.
     }
 
     @NonNull

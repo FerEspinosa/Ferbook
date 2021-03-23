@@ -45,6 +45,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -96,6 +97,7 @@ public class PostDetailActivity extends AppCompatActivity {
     TextView            mTv_relativeTime;
     TextView            mTv_likesNumber;
 
+    ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -186,6 +188,14 @@ public class PostDetailActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         mCommentAdapter.stopListening();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) {
+            mListener.remove();
+        }
     }
 
     private void showDialogComment() {
@@ -371,15 +381,18 @@ public class PostDetailActivity extends AppCompatActivity {
     }
 
     private void getLikesNumber(String mExtraPostId) {
-        mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener = mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                int likesNumber = value.size();
 
-                if (likesNumber == 1){
-                    mTv_likesNumber.setText("1 like");
-                } else {
-                    mTv_likesNumber.setText(likesNumber+" likes");
+                if (value != null) {
+                    int likesNumber = value.size();
+
+                    if (likesNumber == 1){
+                        mTv_likesNumber.setText("1 like");
+                    } else {
+                        mTv_likesNumber.setText(likesNumber+" likes");
+                    }
                 }
             }
         });

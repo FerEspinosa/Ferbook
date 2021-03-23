@@ -24,6 +24,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
@@ -52,6 +53,8 @@ public class UserProfileActivity extends AppCompatActivity {
     RecyclerView    mRecyclerView_myPosts;
 
     Toolbar         mToolbar;
+
+    ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -28,6 +28,7 @@ import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.PostProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 
@@ -45,6 +46,8 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
     PostProvider            mPostProvider;
     PostsAdapter            mPostsAdapter;
     PostsAdapter            mPostsAdapterSearch;
+
+    ListenerRegistration    mListener;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -149,7 +152,15 @@ public class HomeFragment extends Fragment implements MaterialSearchBar.OnSearch
         if (mPostsAdapterSearch != null){
             mPostsAdapterSearch.stopListening();
         }
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mPostsAdapter.getListener()!=null){
+            mListener = mPostsAdapter.getListener();
+            mListener.remove();
+        }
     }
 
     @Override
