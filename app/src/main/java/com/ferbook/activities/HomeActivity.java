@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         ViewedMessageHelper.updateOnline(true, HomeActivity.this);
-        //updateOnline(true);
+        mUsersProvider.updateOnline(mAuthProvider.getUid(),true);
 
     }
 
@@ -54,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         ViewedMessageHelper.updateOnline(false, HomeActivity.this);
+        mUsersProvider.updateOnline(mAuthProvider.getUid(),false);
     }
 
     /*

@@ -59,7 +59,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.setMargins(150,0,0,0);
             holder.linearLayout_messageBubble.setLayoutParams(params);
-            holder.linearLayout_messageBubble.setPadding(30,20,25,20);
+            holder.linearLayout_messageBubble.setPadding(25,20,25,20);
             holder.linearLayout_messageBubble.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout));
             holder.iv_doblecheck.setVisibility(View.VISIBLE);
         }
@@ -71,7 +71,7 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.setMargins(0,0,150,0);
             holder.linearLayout_messageBubble.setLayoutParams(params);
-            holder.linearLayout_messageBubble.setPadding(30,20,0,20);
+            holder.linearLayout_messageBubble.setPadding(30,20,25,20);
             holder.linearLayout_messageBubble.setBackground(context.getResources().getDrawable(R.drawable.rounded_linear_layout_green));
             holder.iv_doblecheck.setVisibility(View.GONE);
         }
@@ -81,7 +81,6 @@ public class MessageAdapter extends FirestoreRecyclerAdapter <Message, MessageAd
         } else {
             holder.iv_doblecheck.setImageResource(R.drawable.doble_check_gray);
         }
-
     }
 
     @NonNull

@@ -22,6 +22,7 @@ public class UsersProvider {
     public Task<DocumentSnapshot> getUser (String id) {
         return mcollection.document(id).get();
     }
+
     public DocumentReference getUserRealTime (String id) {
         return mcollection.document(id);
     }
