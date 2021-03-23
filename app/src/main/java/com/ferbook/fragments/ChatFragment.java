@@ -31,12 +31,9 @@ public class ChatFragment extends Fragment {
     ChatProvider    mChatProvider;
     Authprovider    mAuthProvider;
 
-
-
     public ChatFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,5 +61,13 @@ public class ChatFragment extends Fragment {
         mChatAdapter = new ChatAdapter(options, getContext());
         mRecyclerView.setAdapter(mChatAdapter);
         mChatAdapter.startListening();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mChatAdapter.getListener() != null){
+            mChatAdapter.getListener().remove();
+        }
     }
 }

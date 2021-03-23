@@ -5,20 +5,27 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ferbook.R;
 import com.ferbook.activities.ChatActivity;
 import com.ferbook.models.Chat;
 import com.ferbook.providers.Authprovider;
+import com.ferbook.providers.MessageProvider;
 import com.ferbook.providers.UsersProvider;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -26,15 +33,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.ViewHolder> {
 
     Context context;
-    UsersProvider mUsersProvider;
-    String mUserId="";
-    Authprovider mAuthProvider;
+    UsersProvider usersProvider;
+    Authprovider authProvider;
+    MessageProvider messageProvider;
+    ListenerRegistration listener ;
 
     public ChatAdapter(FirestoreRecyclerOptions <Chat> options, Context context){
         super(options);
         this.context = context;
-        mUsersProvider  = new UsersProvider();
-        mAuthProvider   = new Authprovider();
+        usersProvider = new UsersProvider();
+        authProvider = new Authprovider();
+        messageProvider = new MessageProvider();
     }
 
     @Override
@@ -45,7 +54,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
         String chatId = document.getId();
 
         //si el usuario 1 del chat es el usuario logueado
-        if (mAuthProvider.getUid().equals(chat.getIdUser1())){
+        if (authProvider.getUid().equals(chat.getIdUser1())){
             //buscar la info del usuario 2
             getUserInfo(chat.getIdUser2(),holder);
 
@@ -63,6 +72,48 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
             }
         });
 
+        getLastMesasge(chatId, holder.tv_LastMessage);
+
+        String senderId = "";
+        if (authProvider.getUid().equals(chat.getIdUser1())){
+            senderId = chat.getIdUser2();
+        } else {
+            senderId = chat.getIdUser1();
+        }
+        getUnreadMessages(chatId, senderId, holder.tv_unreadMessages, holder.fl_unreadMessages);
+
+    }
+
+    private void getUnreadMessages(String chatId, String senderId, TextView tv_unreadMessages, FrameLayout fl_unreadMessages) {
+
+        listener = messageProvider.getMessagesByChatAndSender(chatId, senderId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+
+                if (value != null){
+                    int size = value.size();
+                    if (size>0){
+                        fl_unreadMessages.setVisibility(View.VISIBLE);
+                        tv_unreadMessages.setText(String.valueOf(size));
+                    } else {
+                        fl_unreadMessages.setVisibility(View.GONE);
+                    }
+                }
+            }
+        });
+    }
+
+    private void getLastMesasge(String chatId, TextView tv_lastMessage) {
+        messageProvider.getLastMessage(chatId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                int size = queryDocumentSnapshots.size();
+                if (size>0){
+                    String lastMessage = queryDocumentSnapshots.getDocuments().get(0).getString("message");
+                    tv_lastMessage.setText(lastMessage);
+                }
+            }
+        });
     }
 
     private void goToChatActivity(String chatId, String userId1, String userId2) {
@@ -75,7 +126,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
 
     private void getUserInfo (String userId, ViewHolder holder) {
 
-        mUsersProvider.getUser(userId).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        usersProvider.getUser(userId).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()){
@@ -92,7 +143,6 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
                                 Picasso.with(context).load(profileImage).into(holder.civ_chat);
                             }
                         }
-
                     }
                 }
 
@@ -111,20 +161,26 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView        tv_username;
         TextView        tv_LastMessage;
+        TextView        tv_unreadMessages;
         CircleImageView civ_chat;
+        FrameLayout     fl_unreadMessages;
 
         // agregado en leccion del video n°45
         View viewHolder;
 
-
         public ViewHolder (View view){
             super(view);
-            tv_username = view.findViewById(R.id.tv_chatUsername);
-            tv_LastMessage  = view.findViewById(R.id.tv_lastMessageChat);
-            civ_chat        = view.findViewById(R.id.civ_chat);
+            tv_username         = view.findViewById(R.id.tv_chatUsername);
+            tv_LastMessage      = view.findViewById(R.id.tv_lastMessageChat);
+            tv_unreadMessages   = view.findViewById(R.id.tv_unreadMessages);
+            civ_chat            = view.findViewById(R.id.civ_chat);
+            fl_unreadMessages   = view.findViewById(R.id.fl_unreadMessages);
 
-            viewHolder = view;
+            viewHolder          = view;
         }
+    }
 
+    public ListenerRegistration getListener() {
+        return listener;
     }
 }

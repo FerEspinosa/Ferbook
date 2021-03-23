@@ -52,6 +52,28 @@
                 android:textColor="@color/white"/>
         </LinearLayout>
 
+        <FrameLayout
+            android:id="@+id/fl_unreadMessages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <View
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/circularview"/>
+
+            <TextView
+                android:id="@+id/tv_unreadMessages"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:visibility="gone"/>
+
+
+        </FrameLayout>
+
     </LinearLayout>
 
 </FrameLayout>
