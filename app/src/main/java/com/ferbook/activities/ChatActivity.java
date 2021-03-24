@@ -239,7 +239,7 @@ public class ChatActivity extends AppCompatActivity {
                         if (online){
                             mTvRelativeTime.setText("En línea");
 
-                        } else if (documentSnapshot.contains("lastConnection")){
+                        } else if (documentSnapshot.contains("lastConnect")){
 
                             long lastConnect = documentSnapshot.getLong("lastConnect");
                             String relativeTime = RelativeTime.getTimeAgo(lastConnect, ChatActivity.this);

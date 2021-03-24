@@ -18,9 +18,9 @@ public class ViewedMessageHelper {
 
         if (authProvider.getUid()!=null){
             if (isApplicationSentToBackground(context)){
-                usersProvider.updateOnline(authProvider.getUid(),connected);
+                usersProvider.updateOnline(authProvider.getUid(),false);
             } else if (connected) {
-                usersProvider.updateOnline(authProvider.getUid(),connected);
+                usersProvider.updateOnline(authProvider.getUid(),true);
             }
         }
     }

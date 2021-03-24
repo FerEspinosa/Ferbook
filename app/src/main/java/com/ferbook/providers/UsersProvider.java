@@ -41,9 +41,9 @@ public class UsersProvider {
         return mcollection.document(user.getId()).update(map);
     }
 
-    public Task<Void> updateOnline (String userId, boolean status) {
+    public Task<Void> updateOnline (String userId, boolean connected) {
         Map <String, Object> map = new HashMap<>();
-        map.put("online",status);
+        map.put("online",connected);
         map.put("lastConnect", new Date().getTime());
 
         return mcollection.document(userId).update(map);
