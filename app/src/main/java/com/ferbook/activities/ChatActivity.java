@@ -20,10 +20,14 @@ import android.widget.Toast;
 import com.ferbook.R;
 import com.ferbook.adapters.MessageAdapter;
 import com.ferbook.models.Chat;
+import com.ferbook.models.FCMBody;
+import com.ferbook.models.FCMResponse;
 import com.ferbook.models.Message;
 import com.ferbook.providers.Authprovider;
 import com.ferbook.providers.ChatProvider;
 import com.ferbook.providers.MessageProvider;
+import com.ferbook.providers.NotificationProvider;
+import com.ferbook.providers.TokenProvider;
 import com.ferbook.providers.UsersProvider;
 import com.ferbook.utils.RelativeTime;
 import com.ferbook.utils.ViewedMessageHelper;
@@ -41,19 +45,28 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
     String mExtraUserId1;
     String mExtraUserId2;
     String mExtraChatId;
+    long mNotificationChatId;
 
     ChatProvider    mChatProvider;
     MessageProvider mMessageProvider;
     Authprovider    mAuthProvider;
     UsersProvider   mUsersProvider;
+    NotificationProvider mNotificationProvider;
+    TokenProvider mTokenProvider;
 
     View            mActionBarView;
     EditText        mEt_message;
@@ -80,6 +93,8 @@ public class ChatActivity extends AppCompatActivity {
         mMessageProvider    = new MessageProvider();
         mAuthProvider       = new Authprovider();
         mUsersProvider      = new UsersProvider();
+        mNotificationProvider = new NotificationProvider();
+        mTokenProvider      = new TokenProvider();
 
         mRecViewMessage     = findViewById(R.id.recyclerViewMessage);
         mEt_message         = findViewById(R.id.et_chatMessage);
@@ -161,7 +176,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void sendMessage() {
+    private void sendMessage()  {
         String textMessage = mEt_message.getText().toString();
         if (!textMessage.isEmpty()){
             Message message = new Message();
@@ -184,6 +199,7 @@ public class ChatActivity extends AppCompatActivity {
                     if(task.isSuccessful()){
                         mEt_message.setText("");
                         mMessageAdapter.notifyDataSetChanged();
+                        sendNotification(message.getMessage());
                     } else {
                         Toast.makeText(ChatActivity.this, "No se pudo crear el mensaje", Toast.LENGTH_SHORT).show();
                     }
@@ -268,6 +284,7 @@ public class ChatActivity extends AppCompatActivity {
                     createChat();
                 } else {
                     mExtraChatId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                    mNotificationChatId = queryDocumentSnapshots.getDocuments().get(0).getLong("notificationId");
                     getChatMessage();
                     updateViewed();
                 }
@@ -306,8 +323,61 @@ public class ChatActivity extends AppCompatActivity {
         chat.setIds(ids);
         // hasta acá las modificaciones del video 70
 
+        Random random = new Random();
+        int n = random.nextInt(1000000);
+        chat.setNotificationId(n);
+        mNotificationChatId = n;
+
+
         mChatProvider.create(chat);
         mExtraChatId = chat.getId();
         getChatMessage();
+    }
+
+    private void sendNotification (String message){
+
+        String userId = "";
+        if (mAuthProvider.getUid().equals(mExtraUserId1)){
+            userId = mExtraUserId2;
+        } else {
+            userId = mExtraUserId1;
+        }
+
+        mTokenProvider.getToken(userId).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    if(documentSnapshot.contains("token")){
+                        String token = documentSnapshot.getString("token");
+                        Map<String, String> data = new HashMap<>();
+                        data.put("title", "Nuevo mensaje");
+                        data.put("body", message);
+
+                        data.put("notificationId", String.valueOf(mNotificationChatId));
+                        FCMBody body = new FCMBody(token, "high", "4500s", data);
+                        mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
+                            @Override
+                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                if (response.body()!=null){
+                                    if(response.body().getSuccess()==1){
+                                        Toast.makeText(ChatActivity.this, "La notificación se envió correctamente", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            }
+                        });
+                    }
+                } else {
+                    Toast.makeText(ChatActivity.this, "El token de notificaciones del usuario no existe", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }
