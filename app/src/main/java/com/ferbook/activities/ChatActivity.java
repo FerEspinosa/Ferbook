@@ -45,6 +45,7 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -350,44 +351,69 @@ public class ChatActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()){
                     if(documentSnapshot.contains("token")){
                         String token = documentSnapshot.getString("token");
-
-                        //El siguiente objeto me permite convertir el objeto de tipo "Message" en un array de tipo Json
-                        Gson gson = new Gson();
-
-                        ArrayList<Message> messagesArrayList = new ArrayList<>();
-                        messagesArrayList.add(message);
-                        String messages = gson.toJson(messagesArrayList);
-
-                        Map<String, String> data = new HashMap<>();
-                        data.put("title", "Nuevo mensaje");
-                        data.put("body", message.getMessage());
-                        data.put("notificationId", String.valueOf(mNotificationChatId));
-                        data.put("messages", messages);
-
-
-                        FCMBody body = new FCMBody(token, "high", "4500s", data);
-                        mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
-                            @Override
-                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                if (response.body()!=null){
-                                    if(response.body().getSuccess()==1){
-                                        Toast.makeText(ChatActivity.this, "La notificación se envió correctamente", Toast.LENGTH_SHORT).show();
-                                    } else {
-                                        Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                            }
-                        });
+                        getLastThreeMessages(message,token);
                     }
                 } else {
                     Toast.makeText(ChatActivity.this, "El token de notificaciones del usuario no existe", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+
+    private void getLastThreeMessages(Message message, String token) {
+        mMessageProvider.getLastThreeMessagesByChatAndSender(mExtraChatId, mAuthProvider.getUid())
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                ArrayList<Message> messagesArrayList = new ArrayList<>();
+
+                //convertir cada documentSnapshot (que sabemos que es un mensaje)
+                // en un objeto de tipo Message
+                // y agregarlo al Array de mensajes
+                for (DocumentSnapshot d: queryDocumentSnapshots.getDocuments()){
+                    if(d.exists()){
+                        Message message = d.toObject(Message.class);
+                        messagesArrayList.add(message);
+                    }
+                }
+
+                if (messagesArrayList.size()==0){
+                    messagesArrayList.add(message);
+                }
+
+                Collections.reverse(messagesArrayList);
+
+                //El siguiente objeto me permite convertir el objeto de tipo "Message" en un array de tipo Json
+                Gson gson = new Gson();
+                String messages = gson.toJson(messagesArrayList);
+
+                Map<String, String> data = new HashMap<>();
+                data.put("title", "Nuevo mensaje");
+                data.put("body", message.getMessage());
+                data.put("notificationId", String.valueOf(mNotificationChatId));
+                data.put("messages", messages);
+
+
+                FCMBody body = new FCMBody(token, "high", "4500s", data);
+                mNotificationProvider.sendNotification(body).enqueue(new Callback<FCMResponse>() {
+                    @Override
+                    public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                        if (response.body()!=null){
+                            if(response.body().getSuccess()==1){
+                                Toast.makeText(ChatActivity.this, "La notificación se envió correctamente", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(ChatActivity.this, "No se pudo enviar la notificación", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<FCMResponse> call, Throwable t) {
+                    }
+                });
             }
         });
     }

@@ -32,6 +32,14 @@ public class MessageProvider {
         return mCollection.whereEqualTo("chatId", chatId).whereEqualTo("senderId", senderId).whereEqualTo("viewed",false);
     }
 
+    public Query getLastThreeMessagesByChatAndSender (String chatId, String senderId){
+        return mCollection.whereEqualTo("chatId", chatId)
+                .whereEqualTo("senderId", senderId)
+                .whereEqualTo("viewed",false)
+                .orderBy("timestamp", Query.Direction.DESCENDING)
+                .limit(3);
+    }
+
     public Query getLastMessage (String chatId){
         return mCollection.whereEqualTo("chatId", chatId).orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
     }
