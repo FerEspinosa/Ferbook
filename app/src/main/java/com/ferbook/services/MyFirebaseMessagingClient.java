@@ -1,5 +1,10 @@
 package com.ferbook.services;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
@@ -8,6 +13,8 @@ import com.ferbook.models.Message;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.util.Map;
 import java.util.Random;
@@ -52,14 +59,66 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         String receiverUsername = data.get("receiverUsername");
         String messagesJson = data.get("messages");
         String lastMessage = data.get("lastMessage");
+        String senderImage = data.get("senderImage");
+        String receiverImage = data.get("receiverImage");
+
+        int notificationChatId = Integer.parseInt(data.get("notificationId"));
+
         Gson gson = new Gson();
 
         //la siguiente linea transforma el String "messagesJson" en un Array de objetos de tipo "Message"
         Message [] messages = gson.fromJson(messagesJson, Message[].class);
 
-        int notificationChatId = Integer.parseInt(data.get("notificationId"));
-        NotificationHelper notificationHelper = new NotificationHelper(getBaseContext());
-        NotificationCompat.Builder builder = notificationHelper.getNotificationMessage(messages, senderUsername, receiverUsername, lastMessage);
-        notificationHelper.getManager().notify(notificationChatId, builder.build());
+        //el siguiente bloque es para colocar las imagenes del sender y del receiver en la notificacion
+        new Handler(Looper.getMainLooper())
+                .post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Picasso.with(getApplicationContext()).load(senderImage).into(new Target() {
+                            @Override
+                            public void onBitmapLoaded(Bitmap bitmapSender, Picasso.LoadedFrom from) {
+                                Picasso.with(getApplicationContext()).load(receiverImage).into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmapReceiver, Picasso.LoadedFrom from) {
+
+                                        NotificationHelper notificationHelper = new NotificationHelper(getBaseContext());
+                                        NotificationCompat.Builder builder =
+                                                notificationHelper.getNotificationMessage(
+                                                        messages,
+                                                        senderUsername,
+                                                        receiverUsername,
+                                                        lastMessage,
+                                                        bitmapSender,
+                                                        bitmapReceiver
+                                                );
+                                        notificationHelper.getManager().notify(notificationChatId, builder.build());
+                                    }
+
+                                    @Override
+                                    public void onBitmapFailed(Drawable errorDrawable) {
+
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onBitmapFailed(Drawable errorDrawable) {
+
+                            }
+
+                            @Override
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                            }
+                        });
+                    }
+                });
+
+
     }
 }

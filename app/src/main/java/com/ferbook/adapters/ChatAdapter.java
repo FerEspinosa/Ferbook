@@ -37,6 +37,7 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
     Authprovider authProvider;
     MessageProvider messageProvider;
     ListenerRegistration listener ;
+    ListenerRegistration listenerLastMessage ;
 
     public ChatAdapter(FirestoreRecyclerOptions <Chat> options, Context context){
         super(options);
@@ -103,17 +104,32 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
         });
     }
 
+    //este método envía el listener del método de arriba (getUnreadMessages),
+    // para poder terminarlo al abandonar la activity
+    public ListenerRegistration getListener() {
+        return listener;
+    }
+
+
     private void getLastMesasge(String chatId, TextView tv_lastMessage) {
-        messageProvider.getLastMessage(chatId).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+        listenerLastMessage = messageProvider.getLastMessage(chatId).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                int size = queryDocumentSnapshots.size();
-                if (size>0){
-                    String lastMessage = queryDocumentSnapshots.getDocuments().get(0).getString("message");
-                    tv_lastMessage.setText(lastMessage);
-                }
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+               if (value!=null){
+                   int size = value.size();
+                   if (size>0){
+                       String lastMessage = value.getDocuments().get(0).getString("message");
+                       tv_lastMessage.setText(lastMessage);
+                   }
+               }
             }
         });
+    }
+
+    //este método envía el listener del método de "getLastMessage"(arriba),
+    // para poder terminarlo al abandonar la activity
+    public ListenerRegistration getListenerLastMessage() {
+        return listenerLastMessage;
     }
 
     private void goToChatActivity(String chatId, String userId1, String userId2) {
@@ -180,7 +196,4 @@ public class ChatAdapter extends FirestoreRecyclerAdapter <Chat, ChatAdapter.Vie
         }
     }
 
-    public ListenerRegistration getListener() {
-        return listener;
-    }
 }
