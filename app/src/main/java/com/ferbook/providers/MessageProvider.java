@@ -44,6 +44,10 @@ public class MessageProvider {
         return mCollection.whereEqualTo("chatId", chatId).orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
     }
 
+    public Query getSenderLastMessage (String chatId, String senderId){
+        return mCollection.whereEqualTo("chatId", chatId).whereEqualTo("senderId",senderId).orderBy("timestamp", Query.Direction.DESCENDING).limit(1);
+    }
+
     public Query getUnreadMessages (String chatId) {
         return mCollection.whereEqualTo("chatId", chatId).whereEqualTo("viewed",false);
     }

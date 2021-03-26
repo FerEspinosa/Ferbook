@@ -48,7 +48,10 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
     private void showNotificationMessages (Map<String, String> data){
         String title = data.get("title");
         String body = data.get("body");
+        String senderUsername = data.get("senderUsername");
+        String receiverUsername = data.get("receiverUsername");
         String messagesJson = data.get("messages");
+        String lastMessage = data.get("lastMessage");
         Gson gson = new Gson();
 
         //la siguiente linea transforma el String "messagesJson" en un Array de objetos de tipo "Message"
@@ -56,7 +59,7 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
         int notificationChatId = Integer.parseInt(data.get("notificationId"));
         NotificationHelper notificationHelper = new NotificationHelper(getBaseContext());
-        NotificationCompat.Builder builder = notificationHelper.getNotificationMessage(messages);
+        NotificationCompat.Builder builder = notificationHelper.getNotificationMessage(messages, senderUsername, receiverUsername, lastMessage);
         notificationHelper.getManager().notify(notificationChatId, builder.build());
     }
 }
