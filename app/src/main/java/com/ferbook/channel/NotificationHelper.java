@@ -63,14 +63,14 @@ public class NotificationHelper extends ContextWrapper {
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body).setBigContentTitle(title));
     }
 
-    public NotificationCompat.Builder getNotificationMessage (
+    public NotificationCompat.Builder getNotificationMessage(
             Message[] messages,
             String senderUsername,
             String receiverUsername,
             String lastMessage,
             Bitmap bitmapSender,
-            Bitmap bitmapReceiver
-            ) {
+            Bitmap bitmapReceiver,
+            NotificationCompat.Action action) {
         Person person1 = new Person.Builder()
                 .setName(receiverUsername)
                 .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
@@ -102,6 +102,8 @@ public class NotificationHelper extends ContextWrapper {
 
         return new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setStyle(messagingStyle);
+                .setStyle(messagingStyle)
+                //la siguiente línea agrega la funcion del botón para responder dentro de la notificaión
+                .addAction(action);
     }
 }

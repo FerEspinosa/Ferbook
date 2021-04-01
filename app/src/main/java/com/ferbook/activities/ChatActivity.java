@@ -412,6 +412,9 @@ public class ChatActivity extends AppCompatActivity {
         data.put("receiverUsername", mUserNameChat);
         data.put("senderImage", mSenderImage);
         data.put("receiverImage", mReceiverImage);
+        data.put("senderId", message.getSenderId());
+        data.put("receiverId", message.getReceiverId());
+        data.put("chatId", message.getChatId());
 
         String senderId = "";
         if (mAuthProvider.getUid().equals(mExtraUserId1)){
