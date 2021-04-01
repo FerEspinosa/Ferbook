@@ -42,7 +42,6 @@ public class MessageReceiver extends BroadcastReceiver {
         String message = getMessageText(intent).toString();
         sendMessage(message);
 
-
     }
 
     private void sendMessage(String messageText) {

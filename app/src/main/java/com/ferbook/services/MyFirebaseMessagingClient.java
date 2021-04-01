@@ -110,56 +110,54 @@ public class MyFirebaseMessagingClient extends FirebaseMessagingService {
         //el siguiente bloque es para colocar las imagenes del sender y del receiver en la notificacion
         // Acá además se pasa el parámetro para mostrar el botón para responder dentro de la notificación
         new Handler(Looper.getMainLooper())
-                .post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Picasso.with(getApplicationContext()).load(senderImage).into(new Target() {
-                            @Override
-                            public void onBitmapLoaded(Bitmap bitmapSender, Picasso.LoadedFrom from) {
-                                Picasso.with(getApplicationContext()).load(receiverImage).into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmapReceiver, Picasso.LoadedFrom from) {
+            .post(new Runnable() {
+                @Override
+                public void run() {
+                    Picasso.with(getApplicationContext()).load(senderImage).into(new Target() {
+                        @Override
+                        public void onBitmapLoaded(Bitmap bitmapSender, Picasso.LoadedFrom from) {
+                            Picasso.with(getApplicationContext()).load(receiverImage).into(new Target() {
+                                @Override
+                                public void onBitmapLoaded(Bitmap bitmapReceiver, Picasso.LoadedFrom from) {
 
-                                        NotificationHelper notificationHelper = new NotificationHelper(getBaseContext());
-                                        NotificationCompat.Builder builder =
-                                                notificationHelper.getNotificationMessage(
-                                                        messages,
-                                                        senderUsername,
-                                                        receiverUsername,
-                                                        lastMessage,
-                                                        bitmapSender,
-                                                        bitmapReceiver,
-                                                        // la siguiente acción es la que permite responder desde la notificación
-                                                        action
-                                                );
-                                        notificationHelper.getManager().notify(notificationChatId, builder.build());
-                                    }
+                                    NotificationHelper notificationHelper = new NotificationHelper(getBaseContext());
+                                    NotificationCompat.Builder builder =
+                                            notificationHelper.getNotificationMessage(
+                                                    messages,
+                                                    senderUsername,
+                                                    receiverUsername,
+                                                    lastMessage,
+                                                    bitmapSender,
+                                                    bitmapReceiver,
+                                                    // la siguiente acción es la que permite responder desde la notificación
+                                                    action
+                                            );
+                                    notificationHelper.getManager().notify(notificationChatId, builder.build());
+                                }
 
-                                    @Override
-                                    public void onBitmapFailed(Drawable errorDrawable) {
+                                @Override
+                                public void onBitmapFailed(Drawable errorDrawable) {
 
-                                    }
+                                }
 
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                @Override
+                                public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                                    }
-                                });
-                            }
+                                }
+                            });
+                        }
 
-                            @Override
-                            public void onBitmapFailed(Drawable errorDrawable) {
+                        @Override
+                        public void onBitmapFailed(Drawable errorDrawable) {
 
-                            }
+                        }
 
-                            @Override
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                        @Override
+                        public void onPrepareLoad(Drawable placeHolderDrawable) {
 
-                            }
-                        });
-                    }
-                });
-
-
+                        }
+                    });
+                }
+            });
     }
 }
