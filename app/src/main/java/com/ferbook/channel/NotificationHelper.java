@@ -71,15 +71,33 @@ public class NotificationHelper extends ContextWrapper {
             Bitmap bitmapSender,
             Bitmap bitmapReceiver,
             NotificationCompat.Action action) {
-        Person person1 = new Person.Builder()
-                .setName(receiverUsername)
-                .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
-                .build();
 
-        Person person2 = new Person.Builder()
-                .setName(senderUsername)
-                .setIcon(IconCompat.createWithBitmap(bitmapSender))
-                .build();
+        Person person1 = null;
+        if (bitmapReceiver == null) {
+            person1 = new Person.Builder()
+                    .setName(receiverUsername)
+                    .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person_grey))
+                    .build();
+        } else {
+            person1 = new Person.Builder()
+                    .setName(receiverUsername)
+                    .setIcon(IconCompat.createWithBitmap(bitmapReceiver))
+                    .build();
+        }
+
+        Person person2 = null;
+        if (bitmapSender == null) {
+            person2 = new Person.Builder()
+                    .setName(senderUsername)
+                    .setIcon(IconCompat.createWithResource(getApplicationContext(), R.drawable.ic_person_grey))
+                    .build();
+        } else {
+            person2 = new Person.Builder()
+                    .setName(senderUsername)
+                    .setIcon(IconCompat.createWithBitmap(bitmapSender))
+                    .build();
+        }
+
 
         NotificationCompat.MessagingStyle messagingStyle = new NotificationCompat.MessagingStyle(person1);
         NotificationCompat.MessagingStyle.Message message1 =

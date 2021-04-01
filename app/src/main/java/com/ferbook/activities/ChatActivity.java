@@ -65,8 +65,8 @@ public class ChatActivity extends AppCompatActivity {
 
     String mMyUserName;
     String mUserNameChat;
-    String mReceiverImage;
-    String mSenderImage;
+    String mReceiverImage = "";
+    String mSenderImage = "";
 
 
     ChatProvider    mChatProvider;
@@ -410,11 +410,21 @@ public class ChatActivity extends AppCompatActivity {
         data.put("messages", messages);
         data.put("senderUsername", mMyUserName);
         data.put("receiverUsername", mUserNameChat);
-        data.put("senderImage", mSenderImage);
-        data.put("receiverImage", mReceiverImage);
         data.put("senderId", message.getSenderId());
         data.put("receiverId", message.getReceiverId());
         data.put("chatId", message.getChatId());
+
+        if (mSenderImage.equals("")){
+            mSenderImage = "Imagen no válida";
+        }
+        if (mReceiverImage.equals("")){
+            mReceiverImage = "Imagen no válida";
+        }
+
+
+        data.put("senderImage", mSenderImage);
+        data.put("receiverImage", mReceiverImage);
+
 
         String senderId = "";
         if (mAuthProvider.getUid().equals(mExtraUserId1)){
